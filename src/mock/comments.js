@@ -1,22 +1,37 @@
-import {getRandomIntegerNumber} from "../utils";
+import {getRandomIntegerNumber, getRandomArrayItem} from "../utils";
 
-const Emotion = [];
+const Emotion = [
+  `angry`,
+  `puke`,
+  `sleeping`,
+  `smile`,
+];
+
 const Data = [];
-const Author = [];
-const Message = [];
 
+const Author = [
+  `Tim Macoveev`,
+  `John Doe`,
+];
+
+const Message = [
+  `Interesting setting and a good cast`,
+  `Booooooooooring`,
+  `Very very old. Meh`,
+  `Almost two hours? Seriously?`,
+];
 
 const CommentLength = {
   MIN: 1,
-  MAX: 500,
+  MAX: 25,
 };
 
 const generateComment = () => {
   return {
-    emotion: Emotion,
+    emotion: getRandomArrayItem(Emotion),
     data: Data,
-    author: Author,
-    message: Message,
+    author: getRandomArrayItem(Author),
+    message: getRandomArrayItem(Message),
   };
 };
 

@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem} from "../utils";
+import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems} from "../utils";
 import {generationComments} from "./comments";
 
 const NameOfFilms = [
@@ -7,6 +7,48 @@ const NameOfFilms = [
   `The Man with the Golden Arm`,
   `Santa Claus Conquers the Martians`,
   `Popeye the Sailor Meets Sindbad the Sailor`,
+];
+
+const Director = [
+  `Anthony Mann`,
+  `Martin Scorsese`,
+  `Quentin Jerome Tarantino`,
+];
+
+const Writers = [
+  `Anne Wigton`,
+  `Heinz Herald`,
+  `Richard Weil`,
+  `William Shakespeare`,
+  `Ernest Hemingway`,
+  `F. Scott Fitzgerald`,
+];
+
+const Actors = [
+  `Erich von Stroheim`,
+  `Mary Beth Hughes`,
+  `Dan Duryea`,
+  `Robert Pattinson`,
+  `Charles Chaplin`,
+  `Marlon Brando`,
+  `Jack Nicholson`,
+  `Meryl Streep`,
+];
+
+const Country = [
+  `USA`,
+  `Italy`,
+  `United KingDom`,
+  `New Zealand`,
+  `Brazil`,
+];
+
+const Age = [
+  `0+`,
+  `5+`,
+  `10+`,
+  `16+`,
+  `18+`,
 ];
 
 const Poster = [
@@ -29,32 +71,65 @@ const Description = [
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
 
-const FilmInfo = {
-  year: {
-    MIN: 1900,
-    MAX: 1970,
-  },
-  duration: [`1h 55m`, `54m`, `1h 59m`, `1h 21m`, `16m`, `1h 18m`, `1h 32m`],
-  genre: [`Musical`, `Western`, `Drama`, `Comedy`, `Cartoon`, `Mystery`]
+const Year = {
+  MIN: 1900,
+  MAX: 1970,
 };
+
+const Duration = [
+  `1h 55m`,
+  `54m`,
+  `1h 59m`,
+  `1h 21m`,
+  `16m`,
+  `1h 18m`,
+  `1h 32m`
+];
+
+const Genre = [
+  `Musical`,
+  `Western`,
+  `Drama`,
+  `Comedy`,
+  `Cartoon`,
+  `Mystery`,
+  `Film-Noir`
+];
 
 const Rating = {
   MIN: 1,
   MAX: 10,
 };
 
+const getRandomDate = () => {
+  const targetDate = new Date();
+  const day = getRandomIntegerNumber(1, 32);
+  const month = getRandomIntegerNumber(0, 12);
+  const year = getRandomIntegerNumber(1920, 1980);
+
+  targetDate.setFullYear(year, month, day);
+  const options = {day: `numeric`, month: `long`, year: `numeric`};
+
+  return targetDate.toLocaleDateString(`en-GB`, options);
+};
 
 const generateFilm = () => {
   const comments = generationComments();
   return {
     name: getRandomArrayItem(NameOfFilms),
+    director: getRandomArrayItem(Director),
     poster: getRandomArrayItem(Poster),
-    description: getRandomArrayItem(Description),
+    description: getRandomArrayItems(Description),
+    writers: getRandomArrayItems(Writers),
+    actors: getRandomArrayItems(Actors),
+    country: getRandomArrayItem(Country),
     comments: comments.length,
-    year: getRandomIntegerNumber(FilmInfo.year.MIN, FilmInfo.year.MAX),
-    duration: getRandomArrayItem(FilmInfo.duration),
-    genre: getRandomArrayItem(FilmInfo.genre),
+    year: getRandomIntegerNumber(Year.MIN, Year.MAX),
+    duration: getRandomArrayItem(Duration),
+    genres: getRandomArrayItems(Genre),
     rating: getRandomNumber(Rating.MIN, Rating.MAX),
+    age: getRandomArrayItem(Age),
+    releaseDate: getRandomDate(),
   };
 };
 

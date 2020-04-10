@@ -12,4 +12,17 @@ const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
-export {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem};
+const getRandomArrayItems = (array) => {
+  let tempArray = array.slice();
+  const randomCount = Math.floor(Math.random() * array.length) + 1;
+  const newArr = [];
+  for (let i = 0; i < randomCount; i++) {
+    const randomIndex = Math.floor(Math.random() * tempArray.length);
+    const element = tempArray[randomIndex];
+    newArr.push(element);
+    tempArray.splice(randomIndex, 1);
+  }
+  return newArr;
+};
+
+export {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems};
