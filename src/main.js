@@ -52,6 +52,7 @@ const renderFilmsBlock = (filmsBlockComponent, films) => {
     }
   });
 
+  renderFilmsExtraBlock();
 };
 
 const renderFilmsExtraBlock = () => {
@@ -71,18 +72,24 @@ const closePopup = (popup, btnClose) => {
   btnClose.removeEventListener(`click`, closePopup);
 };
 
-const onFilmCardClick = () => {
-  const filmDetailsComponent = new FilmDetailsComponent(films[0]);
-  render(siteBodyElement, filmDetailsComponent.getElement(), RenderPosition.BEFOREEND);
+const onFilmCardClick = (evt) => {
+  const posterActiveFilm = evt.target.attributes.src.value;
+  const nameActiveFilm = evt.target.parentElement.children[0].innerHTML;
+  const commentsCountActiveFilm = evt.target.parentElement.children[5].innerHTML;
 
-  const filmDetailsPopup = filmDetailsComponent.getElement();
-  const buttonCloseFilmDetails = filmDetailsPopup.querySelector(`.film-details__close-btn`);
-  const commentsList = filmDetailsPopup.querySelector(`.film-details__comments-list`);
-  const comments = generationComments(films[0].comments);
+  films.forEach((film) => {
+    if (film.poster === posterActiveFilm && film.name === nameActiveFilm && film.comments === parseInt(commentsCountActiveFilm.slice(0, 3), 10)) {
+      const filmDetailsComponent = new FilmDetailsComponent(film);
+      render(siteBodyElement, filmDetailsComponent.getElement(), RenderPosition.BEFOREEND);
+      const buttonCloseFilmDetails = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
+      const commentsList = filmDetailsComponent.getElement().querySelector(`.film-details__comments-list`);
+      const comments = generationComments(film.comments);
 
-  render(commentsList, new CommentComponent(comments).getElement(), RenderPosition.BEFOREEND);
-  buttonCloseFilmDetails.addEventListener(`click`, function () {
-    closePopup(filmDetailsPopup, buttonCloseFilmDetails);
+      render(commentsList, new CommentComponent(comments).getElement(), RenderPosition.BEFOREEND);
+      buttonCloseFilmDetails.addEventListener(`click`, function () {
+        closePopup(filmDetailsComponent.getElement(), buttonCloseFilmDetails);
+      });
+    }
   });
 };
 
@@ -92,7 +99,6 @@ const addHandlerToFilmCards = () => {
     filmCard.addEventListener(`click`, onFilmCardClick);
   });
 };
-
 
 const filters = generateFilter();
 const films = generateFilms(FILM_COUNT);
@@ -105,5 +111,5 @@ const filmsBlockComponent = new FilmsBlockComponent();
 render(siteMainElement, filmsBlockComponent.getElement(), RenderPosition.BEFOREEND);
 
 renderFilmsBlock(filmsBlockComponent, films);
-renderFilmsExtraBlock();
+
 addHandlerToFilmCards();

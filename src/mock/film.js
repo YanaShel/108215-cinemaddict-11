@@ -1,5 +1,5 @@
 import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems} from "../util";
-import {COMMENTS_COUNT, generationComments} from "./comments";
+import {generationComments} from "./comments";
 
 const NAME_OF_FILMS = [
   `The Dance of Life`,
@@ -52,13 +52,13 @@ const AGE = [
 ];
 
 const POSTER = [
-  `made-for-each-other.png`,
-  `popeye-meets-sinbad.png`,
-  `sagebrush-trail.jpg`,
-  `santa-claus-conquers-the-martians.jpg`,
-  `the-dance-of-life.jpg`,
-  `the-great-flamarion.jpg`,
-  `the-man-with-the-golden-arm.jpg`,
+  `./images/posters/made-for-each-other.png`,
+  `./images/posters/popeye-meets-sinbad.png`,
+  `./images/posters/sagebrush-trail.jpg`,
+  `./images/posters/santa-claus-conquers-the-martians.jpg`,
+  `./images/posters/the-dance-of-life.jpg`,
+  `./images/posters/the-great-flamarion.jpg`,
+  `./images/posters/the-man-with-the-golden-arm.jpg`,
 ];
 
 const DESCRIPTION = [
@@ -119,7 +119,7 @@ const getRandomDate = () => {
 };
 
 const generateFilm = () => {
-  const comments = generationComments(COMMENTS_COUNT);
+  const COMMENTS_COUNT = Math.floor(Math.random() * 12);
   return {
     name: getRandomArrayItem(NAME_OF_FILMS),
     director: getRandomArrayItem(DIRECTOR),
@@ -128,7 +128,7 @@ const generateFilm = () => {
     writers: getRandomArrayItems(WRITERS),
     actors: getRandomArrayItems(ACTORS),
     country: getRandomArrayItem(COUNTRY),
-    comments: comments.length,
+    comments: generationComments(COMMENTS_COUNT).length,
     year: getRandomIntegerNumber(Year.MIN, Year.MAX),
     duration: getRandomArrayItem(DURATION),
     genres: getRandomArrayItems(GENRE),

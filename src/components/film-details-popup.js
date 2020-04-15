@@ -1,8 +1,6 @@
 import {createElement} from "../util";
 
-const createFilmDetailsPopupTemplate = (film) => {
-  const {name, director, poster, description, writers, actors, country, duration, genres, comments, rating, age, releaseDate} = film;
-
+const createFilmDetailsPopupTemplate = ({name, director, poster, description, writers, actors, country, duration, genres, comments, rating, age, releaseDate}) => {
   return `<section class="film-details">
             <form class="film-details__inner" action="" method="get">
               <div class="form-details__top-container">
@@ -11,7 +9,7 @@ const createFilmDetailsPopupTemplate = (film) => {
                 </div>
                 <div class="film-details__info-wrap">
                   <div class="film-details__poster">
-                    <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+                    <img class="film-details__poster-img" src="${poster}" alt="">
                     <p class="film-details__age">${age}</p>
                   </div>
 

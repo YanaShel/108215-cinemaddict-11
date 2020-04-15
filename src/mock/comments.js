@@ -1,7 +1,5 @@
 import {getRandomArrayItem, getRandomIntegerNumber} from "../util";
 
-export const COMMENTS_COUNT = 10;
-
 const EMOTION = [
   `angry`,
   `puke`,
