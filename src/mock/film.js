@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems} from "../utils";
+import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems} from "../util";
 import {COMMENTS_COUNT, generationComments} from "./comments";
 
 const NAME_OF_FILMS = [
@@ -101,6 +101,11 @@ const Rating = {
   MAX: 10,
 };
 
+export const FILM_LIST_TITLE = [
+  `Top rated`,
+  `Most commented`,
+];
+
 const getRandomDate = () => {
   const targetDate = new Date();
   const day = getRandomIntegerNumber(1, 32);
@@ -133,11 +138,8 @@ const generateFilm = () => {
   };
 };
 
-const generateFilms = (count) => {
+export const generateFilms = (count) => {
   return new Array(count)
     .fill(``)
     .map(generateFilm);
 };
-
-export {generateFilms};
-

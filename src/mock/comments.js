@@ -1,4 +1,4 @@
-import {getRandomArrayItem} from "../utils";
+import {getRandomArrayItem} from "../util";
 
 export const COMMENTS_COUNT = 10;
 
