@@ -1,44 +1,41 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from "../utils";
+import {getRandomArrayItem} from "../utils";
 
-const Emotion = [
+export const COMMENTS_COUNT = 10;
+
+const EMOTION = [
   `angry`,
   `puke`,
   `sleeping`,
   `smile`,
 ];
 
-const Data = [];
+const DATA = [];
 
-const Author = [
+const AUTHOR = [
   `Tim Macoveev`,
   `John Doe`,
 ];
 
-const Message = [
+const MESSAGE = [
   `Interesting setting and a good cast`,
   `Booooooooooring`,
   `Very very old. Meh`,
   `Almost two hours? Seriously?`,
 ];
 
-const CommentLength = {
-  MIN: 1,
-  MAX: 25,
-};
 
 const generateComment = () => {
   return {
-    emotion: getRandomArrayItem(Emotion),
-    data: Data,
-    author: getRandomArrayItem(Author),
-    message: getRandomArrayItem(Message),
+    emotion: getRandomArrayItem(EMOTION),
+    data: DATA,
+    author: getRandomArrayItem(AUTHOR),
+    message: getRandomArrayItem(MESSAGE),
   };
 };
 
-const generationComments = () => {
-  const randomNumberCommentsLength = getRandomIntegerNumber(CommentLength.MIN, CommentLength.MAX);
+const generationComments = (count) => {
   const comments = [];
-  for (let i = 0; i < randomNumberCommentsLength; i++) {
+  for (let i = 0; i < count; i++) {
     comments.push(generateComment());
   }
   return comments;

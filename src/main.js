@@ -8,7 +8,7 @@ import {createFilmDetailsPopupTemplate} from "./components/film-details-popup";
 import {createFilmsListExtraTemplate} from "./components/film-list-extra";
 import {createCommentsTemplate} from "./components/comment";
 import {generateFilms} from "./mock/film";
-import {generationFilter} from "./mock/filter";
+import {generateFilter} from "./mock/filter";
 import {generationComments} from "./mock/comments";
 
 const FILM_COUNT = 18;
@@ -18,8 +18,8 @@ const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
 
 const films = generateFilms(FILM_COUNT);
-const filters = generationFilter();
-const comments = generationComments();
+const filters = generateFilter();
+
 
 const siteBodyElement = document.querySelector(`body`);
 const siteHeaderElement = siteBodyElement.querySelector(`.header`);
@@ -66,6 +66,7 @@ const onFilmCardClick = () => {
   const filmDetailsPopup = document.querySelector(`.film-details`);
   const buttonCloseFilmDetails = filmDetailsPopup.querySelector(`.film-details__close-btn`);
   const commentsList = filmDetailsPopup.querySelector(`.film-details__comments-list`);
+  const comments = generationComments(films[0].comments);
   render(commentsList, createCommentsTemplate(comments));
   buttonCloseFilmDetails.addEventListener(`click`, function () {
     closePopup(filmDetailsPopup, buttonCloseFilmDetails);

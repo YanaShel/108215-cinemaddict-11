@@ -1,13 +1,13 @@
 const maxValueOfNavigationCounter = 20;
 
-const filterNames = [
+const FILTER_NAMES = [
   `Watchlist`,
   `History`,
   `Favorites`,
 ];
 
-const generationFilter = () => {
-  return filterNames.map((it) => {
+const generateFilter = () => {
+  return FILTER_NAMES.map((it) => {
     return {
       name: it,
       count: Math.floor(Math.random() * maxValueOfNavigationCounter),
@@ -15,4 +15,4 @@ const generationFilter = () => {
   });
 };
 
-export {generationFilter};
+export {generateFilter};
