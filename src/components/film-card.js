@@ -1,9 +1,31 @@
 import {createElement} from "../util";
 
-const createFilmCardTemplate = (film) => {
-  const {name, poster, description, comments, year, duration, genres, rating} = film;
-  const genreItem = genres[0];
-  return `<article class="film-card">
+export default class FilmCardComponent {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return this.createFilmCardTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+  createFilmCardTemplate(film) {
+    const {name, poster, description, comments, year, duration, genres, rating} = film;
+    const genreItem = genres[0];
+    return `<article class="film-card">
           <h3 class="film-card__title">${name}</h3>
           <p class="film-card__rating">${rating}</p>
           <p class="film-card__info">
@@ -20,28 +42,5 @@ const createFilmCardTemplate = (film) => {
             <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
           </form>
       </article>`;
-};
-
-export default class FilmCardComponent {
-  constructor(film) {
-    this._film = film;
-    this._element = null;
   }
-
-  getTemplate() {
-    return createFilmCardTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
 }

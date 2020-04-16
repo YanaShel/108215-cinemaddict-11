@@ -1,7 +1,29 @@
 import {createElement} from "../util";
 
-const createFilmDetailsPopupTemplate = ({name, director, poster, description, writers, actors, country, duration, genres, comments, rating, age, releaseDate}) => {
-  return `<section class="film-details">
+export default class FilmDetailsComponent {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return this.createFilmDetailsPopupTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+  createFilmDetailsPopupTemplate({name, director, poster, description, writers, actors, country, duration, genres, comments, rating, age, releaseDate}) {
+    return `<section class="film-details">
             <form class="film-details__inner" action="" method="get">
               <div class="form-details__top-container">
                 <div class="film-details__close">
@@ -123,27 +145,5 @@ const createFilmDetailsPopupTemplate = ({name, director, poster, description, wr
               </div>
             </form>
          </section>`;
-};
-
-export default class FilmDetailsComponent {
-  constructor(film) {
-    this._film = film;
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createFilmDetailsPopupTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

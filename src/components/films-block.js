@@ -1,16 +1,12 @@
 import {createElement} from "../util";
 
-const createFilmsBlockTemplate = () => {
-  return `<section class="films"></section>`;
-};
-
 export default class FilmsBlockComponent {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmsBlockTemplate();
+    return `<section class="films"></section>`;
   }
 
   getElement() {
@@ -24,5 +20,4 @@ export default class FilmsBlockComponent {
   removeElement() {
     this._element = null;
   }
-
 }
