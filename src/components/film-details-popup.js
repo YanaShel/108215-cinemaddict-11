@@ -1,28 +1,13 @@
-import {createElement} from "../util";
+import {createElement} from "../dom-util";
 
-export default class FilmDetailsComponent {
+export default class FilmDetails {
   constructor(film) {
     this._film = film;
     this._element = null;
   }
 
   getTemplate() {
-    return this.createFilmDetailsPopupTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
-  createFilmDetailsPopupTemplate({name, director, poster, description, writers, actors, country, duration, genres, comments, rating, age, releaseDate}) {
+    const {name, director, poster, description, writers, actors, country, duration, genres, comments, rating, age, releaseDate} = this._film;
     return `<section class="film-details">
             <form class="film-details__inner" action="" method="get">
               <div class="form-details__top-container">
@@ -74,10 +59,7 @@ export default class FilmDetailsComponent {
                       </tr>
                       <tr class="film-details__row">
                         <td class="film-details__term">Genres</td>
-                        <td class="film-details__cell">
-                          <span class="film-details__genre">${genres.join(`\n`)}</span>
-                          <!--                <span class="film-details__genre">Film-Noir</span>-->
-                          <!--                <span class="film-details__genre">Mystery</span></td>-->
+                        <td class="film-details__cell"><span class="film-details__genre">${genres.join(`\n`)}</span></td>
                       </tr>
                     </table>
 
@@ -105,7 +87,7 @@ export default class FilmDetailsComponent {
                   <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments}</span>
                   </h3>
 
-                  <ul class="film-details__comments-list"></ul>
+                   <ul class="film-details__comments-list"></ul>
 
                   <div class="film-details__new-comment">
                     <div for="add-emoji" class="film-details__add-emoji-label"></div>
@@ -145,5 +127,17 @@ export default class FilmDetailsComponent {
               </div>
             </form>
          </section>`;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
   }
 }

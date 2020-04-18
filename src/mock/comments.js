@@ -41,7 +41,7 @@ const generateComment = () => {
   };
 };
 
-const generationComments = (count) => {
+export const generationComments = (count) => {
   const comments = [];
   for (let i = 0; i < count; i++) {
     comments.push(generateComment());
@@ -49,4 +49,3 @@ const generationComments = (count) => {
   return comments;
 };
 
-export {generationComments};

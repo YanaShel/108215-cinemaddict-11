@@ -1,6 +1,6 @@
-import {createElement} from "../util";
+import {createElement} from "../dom-util";
 
-export default class ShowMoreButtonComponent {
+export default class ShowMoreButton {
   constructor() {
     this._element = null;
   }

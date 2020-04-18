@@ -1,8 +1,3 @@
-export const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-};
-
 export const getRandomNumber = (min, max) => {
   const randomNumber = Math.random() * (max - min) + min;
   return randomNumber.toFixed(1);
@@ -28,22 +23,4 @@ export const getRandomArrayItems = (array) => {
     tempArray.splice(randomIndex, 1);
   }
   return newArr;
-};
-
-export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-export const render = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
 };

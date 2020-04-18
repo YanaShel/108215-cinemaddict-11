@@ -1,6 +1,6 @@
-import {createElement} from "../util";
+import {createElement} from "../dom-util";
 
-export default class FilmListExtraComponent {
+export default class FilmListExtraContainer {
   constructor(title) {
     this._title = title;
     this._element = null;

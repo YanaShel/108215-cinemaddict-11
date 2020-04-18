@@ -1,16 +1,14 @@
-import {createElement} from "../util";
+import {createElement} from "../dom-util";
 
-export default class SortComponent {
-  constructor() {
+export default class Sort {
+  constructor(sortItem, isActive) {
+    this._sortItem = sortItem;
+    this._isActive = isActive;
     this._element = null;
   }
 
   getTemplate() {
-    return `<ul class="sort">
-              <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-              <li><a href="#" class="sort__button">Sort by date</a></li>
-              <li><a href="#" class="sort__button">Sort by rating</a></li>
-            </ul>`;
+    return `<li><a href="#" class="sort__button ${this._isActive ? `sort__button--active` : ``}">${this._sortItem}</a></li>`;
   }
 
   getElement() {

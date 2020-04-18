@@ -1,12 +1,12 @@
 import {createElement} from "../dom-util";
 
-export default class FilmsBlock {
+export default class SiteMenuContainer {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return `<section class="films"></section>`;
+    return `<nav class="main-navigation"></nav>`;
   }
 
   getElement() {

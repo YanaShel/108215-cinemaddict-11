@@ -1,6 +1,6 @@
-import {createElement} from "../util";
+import {createElement} from "../dom-util";
 
-export default class ProfileUserComponent {
+export default class ProfileUser {
   constructor() {
     this._element = null;
   }
