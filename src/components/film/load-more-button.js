@@ -1,12 +1,12 @@
-import {createElement} from "../dom-util";
+import {createElement} from "../../util/dom-util";
 
-export default class FilmsBlock {
+export default class ShowMoreButton {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return `<section class="films"></section>`;
+    return `<button class="films-list__show-more">Show more</button>`;
   }
 
   getElement() {

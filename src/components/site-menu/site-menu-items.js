@@ -1,12 +1,12 @@
-import {createElement} from "../dom-util";
+import {createElement} from "../../util/dom-util";
 
-export default class SortContainer {
+export default class SiteMenuItems {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return `<ul class="sort"></ul>`;
+    return `<div class="main-navigation__items"></div>`;
   }
 
   getElement() {

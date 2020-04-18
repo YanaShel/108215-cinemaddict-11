@@ -1,4 +1,4 @@
-import {getRandomArrayItem, getRandomIntegerNumber} from "../util";
+import {getRandomArrayItem, getRandomIntegerNumber} from "../util/util";
 
 const EMOTION = [
   `angry`,

@@ -1,12 +1,12 @@
-import {createElement} from "../dom-util";
+import {createElement} from "../../util/dom-util";
 
-export default class SiteMenuItems {
+export default class SiteMenuContainer {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return `<div class="main-navigation__items"></div>`;
+    return `<nav class="main-navigation"></nav>`;
   }
 
   getElement() {

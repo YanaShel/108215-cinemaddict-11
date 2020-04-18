@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems} from "../util";
+import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems} from "../util/util";
 import {generationComments} from "./comments";
 
 const NAME_OF_FILMS = [
