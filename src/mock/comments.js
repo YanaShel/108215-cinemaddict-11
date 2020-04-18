@@ -1,47 +1,51 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from "../utils";
+import {getRandomArrayItem, getRandomIntegerNumber} from "../util";
 
-const Emotion = [
+const EMOTION = [
   `angry`,
   `puke`,
   `sleeping`,
   `smile`,
 ];
 
-const Data = [];
+const getRandomDate = () => {
+  const targetDate = new Date();
+  const day = getRandomIntegerNumber(1, 32);
+  const month = getRandomIntegerNumber(0, 12);
+  const year = getRandomIntegerNumber(2000, 2020);
 
-const Author = [
+  targetDate.setFullYear(year, month, day);
+  const options = {day: `numeric`, month: `long`, year: `numeric`};
+
+  return targetDate.toLocaleDateString(`en-GB`, options);
+};
+
+const AUTHOR = [
   `Tim Macoveev`,
   `John Doe`,
 ];
 
-const Message = [
+const MESSAGE = [
   `Interesting setting and a good cast`,
   `Booooooooooring`,
   `Very very old. Meh`,
   `Almost two hours? Seriously?`,
 ];
 
-const CommentLength = {
-  MIN: 1,
-  MAX: 25,
-};
-
 const generateComment = () => {
+  const DATE = getRandomDate();
   return {
-    emotion: getRandomArrayItem(Emotion),
-    data: Data,
-    author: getRandomArrayItem(Author),
-    message: getRandomArrayItem(Message),
+    emotion: getRandomArrayItem(EMOTION),
+    date: DATE,
+    author: getRandomArrayItem(AUTHOR),
+    message: getRandomArrayItem(MESSAGE),
   };
 };
 
-const generationComments = () => {
-  const randomNumberCommentsLength = getRandomIntegerNumber(CommentLength.MIN, CommentLength.MAX);
+export const generationComments = (count) => {
   const comments = [];
-  for (let i = 0; i < randomNumberCommentsLength; i++) {
+  for (let i = 0; i < count; i++) {
     comments.push(generateComment());
   }
   return comments;
 };
 
-export {generationComments};

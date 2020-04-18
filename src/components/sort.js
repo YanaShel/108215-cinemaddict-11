@@ -1,12 +1,14 @@
 import {createElement} from "../dom-util";
 
-export default class FilmsBlock {
-  constructor() {
+export default class Sort {
+  constructor(sortItem, isActive) {
+    this._sortItem = sortItem;
+    this._isActive = isActive;
     this._element = null;
   }
 
   getTemplate() {
-    return `<section class="films"></section>`;
+    return `<li><a href="#" class="sort__button ${this._isActive ? `sort__button--active` : ``}">${this._sortItem}</a></li>`;
   }
 
   getElement() {

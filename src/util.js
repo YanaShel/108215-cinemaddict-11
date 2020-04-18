@@ -1,18 +1,18 @@
-const getRandomNumber = (min, max) => {
+export const getRandomNumber = (min, max) => {
   const randomNumber = Math.random() * (max - min) + min;
   return randomNumber.toFixed(1);
 };
 
-const getRandomIntegerNumber = (min, max) => {
+export const getRandomIntegerNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-const getRandomArrayItem = (array) => {
+export const getRandomArrayItem = (array) => {
   const randomIndex = Math.floor(Math.random() * array.length);
   return array[randomIndex];
 };
 
-const getRandomArrayItems = (array) => {
+export const getRandomArrayItems = (array) => {
   let tempArray = array.slice();
   const randomCount = Math.floor(Math.random() * array.length) + 1;
   const newArr = [];
@@ -24,5 +24,3 @@ const getRandomArrayItems = (array) => {
   }
   return newArr;
 };
-
-export {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems};

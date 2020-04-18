@@ -1,7 +1,7 @@
-import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems} from "../utils";
+import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems} from "../util";
 import {generationComments} from "./comments";
 
-const NameOfFilms = [
+const NAME_OF_FILMS = [
   `The Dance of Life`,
   `Sagebrush Trail`,
   `The Man with the Golden Arm`,
@@ -9,13 +9,13 @@ const NameOfFilms = [
   `Popeye the Sailor Meets Sindbad the Sailor`,
 ];
 
-const Director = [
+const DIRECTOR = [
   `Anthony Mann`,
   `Martin Scorsese`,
   `Quentin Jerome Tarantino`,
 ];
 
-const Writers = [
+const WRITERS = [
   `Anne Wigton`,
   `Heinz Herald`,
   `Richard Weil`,
@@ -24,7 +24,7 @@ const Writers = [
   `F. Scott Fitzgerald`,
 ];
 
-const Actors = [
+const ACTORS = [
   `Erich von Stroheim`,
   `Mary Beth Hughes`,
   `Dan Duryea`,
@@ -35,7 +35,7 @@ const Actors = [
   `Meryl Streep`,
 ];
 
-const Country = [
+const COUNTRY = [
   `USA`,
   `Italy`,
   `United KingDom`,
@@ -43,7 +43,7 @@ const Country = [
   `Brazil`,
 ];
 
-const Age = [
+const AGE = [
   `0+`,
   `5+`,
   `10+`,
@@ -51,17 +51,17 @@ const Age = [
   `18+`,
 ];
 
-const Poster = [
-  `made-for-each-other.png`,
-  `popeye-meets-sinbad.png`,
-  `sagebrush-trail.jpg`,
-  `santa-claus-conquers-the-martians.jpg`,
-  `the-dance-of-life.jpg`,
-  `the-great-flamarion.jpg`,
-  `the-man-with-the-golden-arm.jpg`,
+const POSTER = [
+  `./images/posters/made-for-each-other.png`,
+  `./images/posters/popeye-meets-sinbad.png`,
+  `./images/posters/sagebrush-trail.jpg`,
+  `./images/posters/santa-claus-conquers-the-martians.jpg`,
+  `./images/posters/the-dance-of-life.jpg`,
+  `./images/posters/the-great-flamarion.jpg`,
+  `./images/posters/the-man-with-the-golden-arm.jpg`,
 ];
 
-const Description = [
+const DESCRIPTION = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.`,
   `Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
@@ -76,7 +76,7 @@ const Year = {
   MAX: 1970,
 };
 
-const Duration = [
+const DURATION = [
   `1h 55m`,
   `54m`,
   `1h 59m`,
@@ -86,7 +86,7 @@ const Duration = [
   `1h 32m`
 ];
 
-const Genre = [
+const GENRE = [
   `Musical`,
   `Western`,
   `Drama`,
@@ -101,6 +101,11 @@ const Rating = {
   MAX: 10,
 };
 
+export const FILM_LIST_TITLE = [
+  `Top rated`,
+  `Most commented`,
+];
+
 const getRandomDate = () => {
   const targetDate = new Date();
   const day = getRandomIntegerNumber(1, 32);
@@ -114,30 +119,27 @@ const getRandomDate = () => {
 };
 
 const generateFilm = () => {
-  const comments = generationComments();
+  const COMMENTS_COUNT = Math.floor(Math.random() * 12);
   return {
-    name: getRandomArrayItem(NameOfFilms),
-    director: getRandomArrayItem(Director),
-    poster: getRandomArrayItem(Poster),
-    description: getRandomArrayItems(Description),
-    writers: getRandomArrayItems(Writers),
-    actors: getRandomArrayItems(Actors),
-    country: getRandomArrayItem(Country),
-    comments: comments.length,
+    name: getRandomArrayItem(NAME_OF_FILMS),
+    director: getRandomArrayItem(DIRECTOR),
+    poster: getRandomArrayItem(POSTER),
+    description: getRandomArrayItems(DESCRIPTION),
+    writers: getRandomArrayItems(WRITERS),
+    actors: getRandomArrayItems(ACTORS),
+    country: getRandomArrayItem(COUNTRY),
+    comments: generationComments(COMMENTS_COUNT).length,
     year: getRandomIntegerNumber(Year.MIN, Year.MAX),
-    duration: getRandomArrayItem(Duration),
-    genres: getRandomArrayItems(Genre),
+    duration: getRandomArrayItem(DURATION),
+    genres: getRandomArrayItems(GENRE),
     rating: getRandomNumber(Rating.MIN, Rating.MAX),
-    age: getRandomArrayItem(Age),
+    age: getRandomArrayItem(AGE),
     releaseDate: getRandomDate(),
   };
 };
 
-const generateFilms = (count) => {
+export const generateFilms = (count) => {
   return new Array(count)
     .fill(``)
     .map(generateFilm);
 };
-
-export {generateFilms};
-
