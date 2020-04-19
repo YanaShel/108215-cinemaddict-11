@@ -7,6 +7,7 @@ import SortContainerComponent from "./components/sort/sort-container";
 import SortComponent from "./components/sort/sort";
 import FilmsBlockComponent from "./components/film/films-block";
 import FilmsListComponent from "./components/film/films";
+import NoFilmComponent from "./components/film/no-film";
 import FilmCardComponent from "./components/film/film-card";
 import FilmCardButtonContainerComponent from "./components/film/buttons/button-container";
 import FilmCardButtonComponent from "./components/film/buttons/button";
@@ -26,20 +27,27 @@ const FILM_COUNT = 18;
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
+const Key = {
+  ESCAPE: `Escape`,
+};
+
 const SITE_MENU_ITEMS = [
   {name: `All movies`, className: `item`, href: `all`},
   {name: `Stats`, className: `additional`, href: `stats`},
 ];
+
 const FILTER_NAMES = [
   `Watchlist`,
   `History`,
   `Favorites`,
 ];
+
 const SORT_ITEMS = [
   `Sort by default`,
   `Sort by date`,
   `Sort by rating`
 ];
+
 const FILM_CARD_BUTTONS = [
   {name: `Add to watchlist`, className: `add-to-watchlist`},
   {name: `Mark as watched`, className: `mark-as-watched`},
@@ -60,6 +68,7 @@ const FilmInfo = {
   DURATION: `Runtime`,
   COUNTRY: `Country`,
 };
+
 const EMOJI_NAMES = [
   `smile`,
   `sleeping`,
@@ -111,8 +120,14 @@ const renderFilm = (container, film) => {
 const renderFilmsBlock = (filmsBlockComponent, films) => {
   const filmsListComponent = new FilmsListComponent();
   render(filmsBlockComponent.getElement(), filmsListComponent.getElement());
-  const filmsContainer = filmsListComponent.getElement().querySelector(`.films-list__container`);
 
+  const isFilmsInDataBase = films.length === 0;
+  if (isFilmsInDataBase) {
+    render(filmsListComponent.getElement(), new NoFilmComponent().getElement());
+    return;
+  }
+
+  const filmsContainer = filmsListComponent.getElement().querySelector(`.films-list__container`);
   let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
   films.slice(0, showingFilmsCount)
     .forEach((film) => renderFilm(filmsContainer, film));
@@ -165,6 +180,7 @@ const closePopup = (popup, btnClose) => {
 };
 
 const onFilmCardClick = (evt) => {
+
   const posterActiveFilm = evt.target.attributes.src.value;
   const nameActiveFilm = evt.target.parentElement.children[0].innerHTML;
   const commentsCountActiveFilm = evt.target.parentElement.children[5].innerHTML;
@@ -181,23 +197,35 @@ const onFilmCardClick = (evt) => {
         render(buttonContainer, new FilmDetailsButtonComponent(button).getElement());
       });
 
-      const buttonCloseFilmDetails = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
       const commentsList = filmDetailsComponent.getElement().querySelector(`.film-details__comments-list`);
       const comments = generationComments(film.comments);
-
       comments.forEach((comment) => {
         render(commentsList, new CommentComponent(comment).getElement());
       });
 
       const emojiContainer = filmDetailsComponent.getElement().querySelector(`.film-details__emoji-list`);
-
       EMOJI_NAMES.forEach((name) => {
         render(emojiContainer, new EmojiComponent(name).getElement());
       });
 
+      const buttonCloseFilmDetails = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
+
       buttonCloseFilmDetails.addEventListener(`click`, function () {
         closePopup(filmDetailsComponent.getElement(), buttonCloseFilmDetails);
+        document.removeEventListener(`keydown`, onEscKeyDown);
       });
+
+      const onEscKeyDown = (evtKey) => {
+        const isEscKey = evtKey.key === Key.ESCAPE;
+
+        if (isEscKey) {
+          filmDetailsComponent.getElement().remove();
+          document.removeEventListener(`keydown`, onEscKeyDown);
+        }
+      };
+
+      document.addEventListener(`keydown`, onEscKeyDown);
+
     }
   });
 };
