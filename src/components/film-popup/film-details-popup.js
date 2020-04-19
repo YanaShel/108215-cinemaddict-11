@@ -7,7 +7,7 @@ export default class FilmDetails {
   }
 
   getTemplate() {
-    const {name, director, poster, description, writers, actors, country, duration, genres, comments, rating, age, releaseDate} = this._film;
+    const {name, poster, description, comments, rating, age} = this._film;
     return `<section class="film-details">
             <form class="film-details__inner" action="" method="get">
               <div class="form-details__top-container">
@@ -32,54 +32,13 @@ export default class FilmDetails {
                       </div>
                     </div>
 
-                    <table class="film-details__table">
-                      <tr class="film-details__row">
-                        <td class="film-details__term">Director</td>
-                        <td class="film-details__cell">${director}</td>
-                      </tr>
-                      <tr class="film-details__row">
-                        <td class="film-details__term">Writers</td>
-                        <td class="film-details__cell">${writers.join(`, `)}</td>
-                      </tr>
-                      <tr class="film-details__row">
-                        <td class="film-details__term">Actors</td>
-                        <td class="film-details__cell">${actors.join(`, `)}</td>
-                      </tr>
-                      <tr class="film-details__row">
-                        <td class="film-details__term">Release Date</td>
-                        <td class="film-details__cell">${releaseDate}</td>
-                      </tr>
-                      <tr class="film-details__row">
-                        <td class="film-details__term">Runtime</td>
-                        <td class="film-details__cell">${duration}</td>
-                      </tr>
-                      <tr class="film-details__row">
-                        <td class="film-details__term">Country</td>
-                        <td class="film-details__cell">${country}</td>
-                      </tr>
-                      <tr class="film-details__row">
-                        <td class="film-details__term">Genres</td>
-                        <td class="film-details__cell"><span class="film-details__genre">${genres.join(`\n`)}</span></td>
-                      </tr>
-                    </table>
+                    <table class="film-details__table"></table>
 
                     <p class="film-details__film-description">${description.join(`\n`)}</p>
                   </div>
                 </div>
 
-                <section class="film-details__controls">
-                  <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-                  <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to
-                    watchlist</label>
-
-                  <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-                  <label for="watched" class="film-details__control-label film-details__control-label--watched">Already
-                    watched</label>
-
-                  <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-                  <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to
-                    favorites</label>
-                </section>
+                <section class="film-details__controls"></section>
               </div>
 
               <div class="form-details__bottom-container">
@@ -97,31 +56,7 @@ export default class FilmDetails {
                                 name="comment"></textarea>
                     </label>
 
-                    <div class="film-details__emoji-list">
-                      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile"
-                             value="smile">
-                      <label class="film-details__emoji-label" for="emoji-smile">
-                        <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-                      </label>
-
-                      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio"
-                             id="emoji-sleeping" value="sleeping">
-                      <label class="film-details__emoji-label" for="emoji-sleeping">
-                        <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-                      </label>
-
-                      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke"
-                             value="puke">
-                      <label class="film-details__emoji-label" for="emoji-puke">
-                        <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-                      </label>
-
-                      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry"
-                             value="angry">
-                      <label class="film-details__emoji-label" for="emoji-angry">
-                        <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-                      </label>
-                    </div>
+                    <div class="film-details__emoji-list"></div>
                   </div>
                 </section>
               </div>
