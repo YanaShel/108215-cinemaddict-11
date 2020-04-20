@@ -1,7 +1,7 @@
-import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems} from "../util/util";
+import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems, getRandomDate} from "../util/util";
 import {generationComments} from "./comments";
 
-const NAME_OF_FILMS = [
+const FILM_NAMES = [
   `The Dance of Life`,
   `Sagebrush Trail`,
   `The Man with the Golden Arm`,
@@ -9,7 +9,7 @@ const NAME_OF_FILMS = [
   `Popeye the Sailor Meets Sindbad the Sailor`,
 ];
 
-const DIRECTOR = [
+const DIRECTORS = [
   `Anthony Mann`,
   `Martin Scorsese`,
   `Quentin Jerome Tarantino`,
@@ -35,7 +35,7 @@ const ACTORS = [
   `Meryl Streep`,
 ];
 
-const COUNTRY = [
+const COUNTRIES = [
   `USA`,
   `Italy`,
   `United KingDom`,
@@ -43,7 +43,7 @@ const COUNTRY = [
   `Brazil`,
 ];
 
-const AGE = [
+const AGE_RATINGS = [
   `0+`,
   `5+`,
   `10+`,
@@ -51,7 +51,7 @@ const AGE = [
   `18+`,
 ];
 
-const POSTER = [
+const POSTERS = [
   `./images/posters/made-for-each-other.png`,
   `./images/posters/popeye-meets-sinbad.png`,
   `./images/posters/sagebrush-trail.jpg`,
@@ -61,7 +61,7 @@ const POSTER = [
   `./images/posters/the-man-with-the-golden-arm.jpg`,
 ];
 
-const DESCRIPTION = [
+const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.`,
   `Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
@@ -76,7 +76,7 @@ const Year = {
   MAX: 1970,
 };
 
-const DURATION = [
+const DURATIONS = [
   `1h 55m`,
   `54m`,
   `1h 59m`,
@@ -86,7 +86,7 @@ const DURATION = [
   `1h 32m`
 ];
 
-const GENRE = [
+const GENRES = [
   `Musical`,
   `Western`,
   `Drama`,
@@ -101,39 +101,22 @@ const Rating = {
   MAX: 10,
 };
 
-export const FILM_LIST_TITLE = [
-  `Top rated`,
-  `Most commented`,
-];
-
-const getRandomDate = () => {
-  const targetDate = new Date();
-  const day = getRandomIntegerNumber(1, 32);
-  const month = getRandomIntegerNumber(0, 12);
-  const year = getRandomIntegerNumber(1920, 1980);
-
-  targetDate.setFullYear(year, month, day);
-  const options = {day: `numeric`, month: `long`, year: `numeric`};
-
-  return targetDate.toLocaleDateString(`en-GB`, options);
-};
-
 const generateFilm = () => {
   const COMMENTS_COUNT = Math.floor(Math.random() * 12);
   return {
-    name: getRandomArrayItem(NAME_OF_FILMS),
-    director: getRandomArrayItem(DIRECTOR),
-    poster: getRandomArrayItem(POSTER),
-    description: getRandomArrayItems(DESCRIPTION),
+    name: getRandomArrayItem(FILM_NAMES),
+    director: getRandomArrayItem(DIRECTORS),
+    poster: getRandomArrayItem(POSTERS),
+    description: getRandomArrayItems(DESCRIPTIONS),
     writers: getRandomArrayItems(WRITERS),
     actors: getRandomArrayItems(ACTORS),
-    country: getRandomArrayItem(COUNTRY),
+    country: getRandomArrayItem(COUNTRIES),
     comments: generationComments(COMMENTS_COUNT).length,
     year: getRandomIntegerNumber(Year.MIN, Year.MAX),
-    duration: getRandomArrayItem(DURATION),
-    genres: getRandomArrayItems(GENRE),
+    duration: getRandomArrayItem(DURATIONS),
+    genres: getRandomArrayItems(GENRES),
     rating: getRandomNumber(Rating.MIN, Rating.MAX),
-    age: getRandomArrayItem(AGE),
+    age: getRandomArrayItem(AGE_RATINGS),
     releaseDate: getRandomDate(),
   };
 };

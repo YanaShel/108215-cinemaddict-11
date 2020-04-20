@@ -20,7 +20,6 @@ export default class FilmCard {
               <img src="${poster}" alt="" class="film-card__poster">
               <p class="film-card__description">${description.join(`\n`)}</p>
               <a class="film-card__comments">${comments} comments</a>
-              <form class="film-card__controls"></form>
             </article>`;
   }
 

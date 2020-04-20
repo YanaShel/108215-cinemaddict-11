@@ -1,3 +1,7 @@
+export const Key = {
+  ESCAPE: `Escape`,
+};
+
 export const getRandomNumber = (min, max) => {
   const randomNumber = Math.random() * (max - min) + min;
   return randomNumber.toFixed(1);
@@ -23,4 +27,16 @@ export const getRandomArrayItems = (array) => {
     tempArray.splice(randomIndex, 1);
   }
   return newArr;
+};
+
+export const getRandomDate = () => {
+  const targetDate = new Date();
+  const day = getRandomIntegerNumber(1, 32);
+  const month = getRandomIntegerNumber(0, 12);
+  const year = getRandomIntegerNumber(2000, 2020);
+
+  targetDate.setFullYear(year, month, day);
+  const options = {day: `numeric`, month: `long`, year: `numeric`};
+
+  return targetDate.toLocaleDateString(`en-GB`, options);
 };

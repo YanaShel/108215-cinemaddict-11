@@ -1,6 +1,6 @@
-import {createElement} from "../../../util/dom-util";
+import {createElement} from "../../util/dom-util";
 
-export default class ButtonContainer {
+export default class FilmCardButtonContainer {
   constructor() {
     this._element = null;
   }

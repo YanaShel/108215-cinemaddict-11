@@ -1,16 +1,12 @@
 import {createElement} from "../../util/dom-util";
 
-export default class FilmListExtraContainer {
-  constructor(title) {
-    this._title = title;
+export default class MenuItems {
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return `<section class="films-list--extra">
-              <h2 class="films-list__title">${this._title}</h2>
-              <div class="films-list__container"></div>
-           </section>`;
+    return `<div class="main-navigation__items"></div>`;
   }
 
   getElement() {

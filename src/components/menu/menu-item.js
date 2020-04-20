@@ -1,15 +1,16 @@
 import {createElement} from "../../util/dom-util";
 
-export default class SiteMenuFilter {
-  constructor(filter, count) {
-    this._filter = filter;
-    this._count = count;
+export default class MenuItem {
+  constructor(item) {
+    this._item = item;
     this._element = null;
   }
 
   getTemplate() {
-    return `<a href="#${this._filter}" class="main-navigation__item">${this._filter}
-                <span class="main-navigation__item-count">${this._count}</span>
+    const {name, className, href, isActive} = this._item;
+    return `<a href="#${href}"
+               class="main-navigation__${className}${isActive ? `main-navigation__item--active` : ``}">
+               ${name}
             </a>`;
   }
 

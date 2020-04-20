@@ -1,6 +1,6 @@
 import {createElement} from "../../util/dom-util";
 
-export default class FilmsBlock {
+export default class FilmsContainer {
   constructor() {
     this._element = null;
   }
