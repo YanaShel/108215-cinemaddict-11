@@ -10,6 +10,11 @@ export default class FilmCard {
   constructor(film) {
     this._film = film;
     this._element = null;
+    this._cardClickListener = null;
+  }
+
+  setCardClickListener(cb) {
+    this._cardClickListener = cb;
   }
 
   _getButtonsControl() {
@@ -43,6 +48,7 @@ export default class FilmCard {
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
+      this._element.addEventListener(`click`, this._cardClickListener);
     }
 
     return this._element;
