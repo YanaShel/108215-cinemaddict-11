@@ -21,9 +21,9 @@ export default class FilmCard {
   }
 
   getTemplate() {
-    const {name, poster, description, comments, year, duration, genres, rating} = this._film;
+    const {id, name, poster, description, comments, year, duration, genres, rating} = this._film;
     const genreItem = genres[0];
-    return `<article class="film-card">
+    return `<article class="film-card" data-film-id = ${id}>
               <h3 class="film-card__title">${name}</h3>
               <p class="film-card__rating">${rating}</p>
               <p class="film-card__info">

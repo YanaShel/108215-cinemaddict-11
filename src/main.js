@@ -10,7 +10,7 @@ import FilmDetails from "./components/film-popup/film-details";
 import ExtraListsContainer from "./components/film/extra-lists-container";
 import {generateFilms} from "./mock/film";
 import {render} from "./util/dom-util";
-import {Key} from "./util/util";
+import {getRandomArrayItem, Key} from "./util/util";
 
 const FILM_COUNT = 18;
 const SHOWING_FILMS_COUNT_ON_START = 5;
@@ -76,53 +76,45 @@ const renderFilmsBlock = (filmsBlockComponent, films) => {
 };
 
 const renderFilmsExtraBlock = () => {
-  render(filmsBlockComponent.getElement(), new ExtraListsContainer(EXTRA_LISTS[0]).getElement());
-  render(filmsBlockComponent.getElement(), new ExtraListsContainer(EXTRA_LISTS[1]).getElement());
+  EXTRA_LISTS.map((listName) => new ExtraListsContainer(listName).getElement())
+    .forEach((list) => render(filmsBlockComponent.getElement(), list));
 
   const filmsListsExtra = filmsBlockComponent.getElement().querySelectorAll(`.films-list--extra`);
   filmsListsExtra.forEach((list) => {
     const filmsExtraContainer = list.querySelector(`.films-list__container`);
-    render(filmsExtraContainer, new FilmCard(films[Math.floor(Math.random() * FILM_COUNT)]).getElement());
-    render(filmsExtraContainer, new FilmCard(films[Math.floor(Math.random() * FILM_COUNT)]).getElement());
+    render(filmsExtraContainer, new FilmCard(getRandomArrayItem(films)).getElement());
+    render(filmsExtraContainer, new FilmCard(getRandomArrayItem(films)).getElement());
   });
 };
 
-const closePopup = (popup, btnClose) => {
+const closeFilmDetailsPopup = (popup, btnClose) => {
   popup.remove();
-  btnClose.removeEventListener(`click`, closePopup);
+  btnClose.removeEventListener(`click`, closeFilmDetailsPopup);
 };
 
 const onFilmCardClick = (evt) => {
+  const filmId = evt.currentTarget.dataset.filmId;
 
-  const posterActiveFilm = evt.target.attributes.src.value;
-  const nameActiveFilm = evt.target.parentElement.children[0].innerHTML;
-  const commentsCountActiveFilm = evt.target.parentElement.children[5].innerHTML;
+  const filmDetailsComponent = new FilmDetails(films[filmId]);
+  render(siteBodyElement, filmDetailsComponent.getElement());
 
-  films.forEach((film) => {
-    if (film.poster === posterActiveFilm && film.name === nameActiveFilm && film.comments.length === parseInt(commentsCountActiveFilm.slice(0, 3), 10)) {
-      const filmDetailsComponent = new FilmDetails(film);
-      render(siteBodyElement, filmDetailsComponent.getElement());
+  const buttonCloseFilmDetails = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
 
-      const buttonCloseFilmDetails = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
-
-      buttonCloseFilmDetails.addEventListener(`click`, function () {
-        closePopup(filmDetailsComponent.getElement(), buttonCloseFilmDetails);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-
-      const onEscKeyDown = (evtKey) => {
-        const isEscKey = evtKey.key === Key.ESCAPE;
-
-        if (isEscKey) {
-          filmDetailsComponent.getElement().remove();
-          document.removeEventListener(`keydown`, onEscKeyDown);
-        }
-      };
-
-      document.addEventListener(`keydown`, onEscKeyDown);
-
-    }
+  buttonCloseFilmDetails.addEventListener(`click`, function () {
+    closeFilmDetailsPopup(filmDetailsComponent.getElement(), buttonCloseFilmDetails);
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
+
+  const onEscKeyDown = (evtKey) => {
+    const isEscKey = evtKey.key === Key.ESCAPE;
+
+    if (isEscKey) {
+      filmDetailsComponent.getElement().remove();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  document.addEventListener(`keydown`, onEscKeyDown);
 };
 
 const addHandlerToFilmCards = () => {
@@ -135,7 +127,7 @@ const addHandlerToFilmCards = () => {
 const films = generateFilms(FILM_COUNT);
 const filmsBlockComponent = new FilmsContainer();
 
-render(siteHeaderElement, new UserProfile().getElement());
+render(siteHeaderElement, new UserProfile(`Movie Buff`).getElement());
 renderSiteMenu();
 renderSort();
 render(siteMainElement, filmsBlockComponent.getElement());

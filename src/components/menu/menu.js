@@ -26,9 +26,11 @@ export default class Menu {
 
   _getMenuFilers() {
     return FILTER_NAMES.map((name) => {
-      return `<a href="#${name}" class="main-navigation__item">${name}
+      return `<a href="#${name}"
+                 class="main-navigation__item">
+                 ${name}
                 <span class="main-navigation__item-count">${getRandomIntegerNumber(1, 10)}</span>
-            </a>`;
+              </a>`;
     }).join(`\n`);
   }
 
