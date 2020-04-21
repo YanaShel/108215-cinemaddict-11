@@ -111,7 +111,7 @@ const generateFilm = () => {
     writers: getRandomArrayItems(WRITERS),
     actors: getRandomArrayItems(ACTORS),
     country: getRandomArrayItem(COUNTRIES),
-    comments: generationComments(COMMENTS_COUNT).length,
+    comments: generationComments(COMMENTS_COUNT),
     year: getRandomIntegerNumber(Year.MIN, Year.MAX),
     duration: getRandomArrayItem(DURATIONS),
     genres: getRandomArrayItems(GENRES),

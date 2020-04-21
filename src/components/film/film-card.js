@@ -1,9 +1,23 @@
 import {createElement} from "../../util/dom-util";
 
+const FILM_CARD_BUTTONS = [
+  {name: `Add to watchlist`, className: `add-to-watchlist`},
+  {name: `Mark as watched`, className: `mark-as-watched`},
+  {name: `Mark as favorite`, className: `favorite`},
+];
+
 export default class FilmCard {
   constructor(film) {
     this._film = film;
     this._element = null;
+  }
+
+  _getButtonsControl() {
+    return FILM_CARD_BUTTONS.map(({name, className}) => {
+      return `<button class="film-card__controls-item button film-card__controls-item--${className}">
+                   ${name}
+              </button>`;
+    }).join(`\n`);
   }
 
   getTemplate() {
@@ -19,7 +33,10 @@ export default class FilmCard {
               </p>
               <img src="${poster}" alt="" class="film-card__poster">
               <p class="film-card__description">${description.join(`\n`)}</p>
-              <a class="film-card__comments">${comments} comments</a>
+              <a class="film-card__comments">${comments.length} comments</a>
+              <form class="film-card__controls">
+                ${this._getButtonsControl()}
+              </form>
             </article>`;
   }
 
