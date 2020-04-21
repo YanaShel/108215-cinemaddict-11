@@ -1,30 +1,18 @@
-import {getRandomArrayItem, getRandomIntegerNumber} from "../util";
+import {getRandomArrayItem, getRandomDate} from "../util/util";
 
-const EMOTION = [
+const EMOTIONS = [
   `angry`,
   `puke`,
   `sleeping`,
   `smile`,
 ];
 
-const getRandomDate = () => {
-  const targetDate = new Date();
-  const day = getRandomIntegerNumber(1, 32);
-  const month = getRandomIntegerNumber(0, 12);
-  const year = getRandomIntegerNumber(2000, 2020);
-
-  targetDate.setFullYear(year, month, day);
-  const options = {day: `numeric`, month: `long`, year: `numeric`};
-
-  return targetDate.toLocaleDateString(`en-GB`, options);
-};
-
-const AUTHOR = [
+const AUTHORS = [
   `Tim Macoveev`,
   `John Doe`,
 ];
 
-const MESSAGE = [
+const MESSAGES = [
   `Interesting setting and a good cast`,
   `Booooooooooring`,
   `Very very old. Meh`,
@@ -34,10 +22,10 @@ const MESSAGE = [
 const generateComment = () => {
   const DATE = getRandomDate();
   return {
-    emotion: getRandomArrayItem(EMOTION),
+    emotion: getRandomArrayItem(EMOTIONS),
     date: DATE,
-    author: getRandomArrayItem(AUTHOR),
-    message: getRandomArrayItem(MESSAGE),
+    author: getRandomArrayItem(AUTHORS),
+    message: getRandomArrayItem(MESSAGES),
   };
 };
 
