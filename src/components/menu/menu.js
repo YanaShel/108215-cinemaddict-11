@@ -1,4 +1,4 @@
-import {createElement} from "../../util/dom-util";
+import Abstract from "../abstract";
 import {getRandomIntegerNumber} from "../../util/util";
 
 const SITE_MENU_ITEMS = [
@@ -12,11 +12,7 @@ const FILTER_NAMES = [
   `Favorites`,
 ];
 
-export default class Menu {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Menu extends Abstract {
   _getMenuItem(item) {
     return `<a href="#${item.href}"
                class="main-navigation__${item.className} ${item.isActive ? `main-navigation__item--active` : ``}">
@@ -42,17 +38,5 @@ export default class Menu {
                 </div>
                 ${this._getMenuItem(SITE_MENU_ITEMS[1])}
              </nav>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

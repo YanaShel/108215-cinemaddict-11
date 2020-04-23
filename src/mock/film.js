@@ -101,10 +101,9 @@ const Rating = {
   MAX: 10,
 };
 
-const generateFilm = (filmId) => {
-  const COMMENTS_COUNT = Math.floor(Math.random() * 12);
+const generateFilm = () => {
+  const COMMENTS_COUNT = Math.floor(Math.random() * 20);
   return {
-    id: filmId,
     name: getRandomArrayItem(FILM_NAMES),
     director: getRandomArrayItem(DIRECTORS),
     poster: getRandomArrayItem(POSTERS),
@@ -125,5 +124,5 @@ const generateFilm = (filmId) => {
 export const generateFilms = (count) => {
   return new Array(count)
     .fill(``)
-    .map((func, i) => generateFilm(i));
+    .map(generateFilm);
 };
