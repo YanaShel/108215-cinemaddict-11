@@ -1,4 +1,4 @@
-import {createElement} from "../../util/dom-util";
+import Abstract from "../abstract";
 
 const EMOJI_NAMES = [
   `smile`,
@@ -22,10 +22,11 @@ const FilmInfo = {
   country: `Country`,
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends Abstract {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
   _renderInfo() {
@@ -98,6 +99,10 @@ export default class FilmDetails {
                    <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji">
               </label>`;
     }).join(`\n`);
+  }
+
+  setCloseButtonClickListener(cb) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, cb);
   }
 
   getTemplate() {
@@ -180,17 +185,5 @@ export default class FilmDetails {
               </div>
             </form>
          </section>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
