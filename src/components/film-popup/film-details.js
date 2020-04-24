@@ -29,80 +29,103 @@ export default class FilmDetails extends Abstract {
     this._film = film;
   }
 
-  _renderInfo() {
-    return Object.entries(FilmInfo).map(([value, name]) => {
-      return `<tr class="film-details__row">
-                <td class="film-details__term">
-                    ${name}
-                </td>
-                <td class="film-details__cell">
-                    ${this._film[value]}
-                </td>
-                </tr>`;
-    }).join(`\n`);
+  setCloseButtonClickListener(cb) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, cb);
   }
 
-  _getGenres() {
-    return this._film.genres.map((genre) => `<span class="film-details__genre">
-                                                ${genre}
-                                             </span>`).join(`\n`);
+  _renderInfo(value, name) {
+    return (`
+         <tr class="film-details__row">
+            <td class="film-details__term">
+               ${name}
+            </td>
+            <td class="film-details__cell">
+               ${this._film[value]}
+            </td>
+         </tr>
+      `).trim();
   }
 
-  _renderGenre() {
-    return `<tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
-              <td class="film-details__cell">${this._getGenres()}
-              </td>
-            </tr>`;
+  _renderGenre(genre) {
+    return (
+      `<span class="film-details__genre">
+            ${genre}
+       </span>`
+    ).trim();
   }
 
-  _renderButtonsControl() {
-    return FILM_DETAILS_BUTTONS.map(({name, id}) => {
-      return `<input type="checkbox"
+  _renderGenres() {
+    return this._film.genres.map((genre) => this._renderGenre(genre)).join(`\n`);
+  }
+
+  _renderButtonControl(name, id) {
+    return (
+      `<input type="checkbox"
                      class="film-details__control-input visually-hidden"
                      id="${id}"
                      name="${id}">
               <label for="${id}"
                      class="film-details__control-label film-details__control-label--${id}">
                      ${name}
-              </label>`;
-    }).join(`\n`);
+              </label>`
+    ).trim();
+
   }
 
-  _renderComments() {
-    return this._film.comments.map(({emotion, author, date, message}) => {
-      return `<li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
-              </span>
-              <div>
+  _renderComment(emotion, author, date, message) {
+    return (
+      `<li class="film-details__comment">
+            <span class="film-details__comment-emoji">
+                <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
+            </span>
+            <div>
                 <p class="film-details__comment-text">${message}</p>
                 <p class="film-details__comment-info">
                   <span class="film-details__comment-author">${author}</span>
                   <span class="film-details__comment-day">${date}</span>
                   <button class="film-details__comment-delete">Delete</button>
                 </p>
-              </div>
-             </li>`;
-    }).join(`\n`);
+            </div>
+         </li>`
+    ).trim();
   }
 
-  _renderEmoji() {
-    return EMOJI_NAMES.map((name) => {
-      return `<input class="film-details__emoji-item visually-hidden"
-                   name="comment-emoji"
-                   type="radio"
-                   id="emoji-${name}"
-                   value="${name}">
-              <label class="film-details__emoji-label"
-                   for="emoji-${name}">
-                   <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji">
-              </label>`;
-    }).join(`\n`);
+  _renderEmoji(name) {
+    return (
+      `<input class="film-details__emoji-item visually-hidden"
+              name=" comment-emoji"
+              type="radio"
+              id="emoji-${name}"
+              value="${name}">
+       <label class="film-details__emoji-label"
+              for="emoji-${name}">
+              <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji">
+       </label>`
+    ).trim();
   }
 
-  setCloseButtonClickListener(cb) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, cb);
+  _getInfo() {
+    return Object.entries(FilmInfo).map(([value, name]) => this._renderInfo(value, name)).join(`\n`);
+  }
+
+  _getGenre() {
+    return `<tr class="film-details__row">
+              <td class="film-details__term">Genres</td>
+              <td class="film-details__cell">${this._renderGenres()}
+              </td>
+            </tr>`;
+  }
+
+  _getButtonsControl() {
+    return FILM_DETAILS_BUTTONS.map(({name, id}) => this._renderButtonControl(name, id)).join(`\n`);
+  }
+
+  _getComments() {
+    return this._film.comments.map(({emotion, author, date, message}) => this._renderComment(emotion, author, date, message)).join(`\n`);
+  }
+
+  _getEmoji() {
+    return EMOJI_NAMES.map((name) => this._renderEmoji(name)).join(`\n`);
   }
 
   getTemplate() {
@@ -142,8 +165,8 @@ export default class FilmDetails extends Abstract {
                     </div>
 
                     <table class="film-details__table">
-                        ${this._renderInfo()}
-                        ${this._renderGenre()}
+                        ${this._getInfo()}
+                        ${this._getGenre()}
                     </table>
 
                     <p class="film-details__film-description">
@@ -153,7 +176,7 @@ export default class FilmDetails extends Abstract {
                 </div>
 
                 <section class="film-details__controls">
-                    ${this._renderButtonsControl()}
+                    ${this._getButtonsControl()}
                 </section>
               </div>
 
@@ -166,7 +189,7 @@ export default class FilmDetails extends Abstract {
                   </h3>
 
                    <ul class="film-details__comments-list">
-                       ${this._renderComments()}
+                       ${this._getComments()}
                    </ul>
 
                   <div class="film-details__new-comment">
@@ -178,7 +201,7 @@ export default class FilmDetails extends Abstract {
                     </label>
 
                     <div class="film-details__emoji-list">
-                        ${this._renderEmoji()}
+                        ${this._getEmoji()}
                     </div>
                   </div>
                 </section>

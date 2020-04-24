@@ -13,30 +13,40 @@ const FILTER_NAMES = [
 ];
 
 export default class Menu extends Abstract {
+  _renderMenuFiler(name) {
+    return (
+      `<a href="#${name}"
+          class="main-navigation__item">
+             ${name}
+            <span class="main-navigation__item-count">
+                ${getRandomIntegerNumber(1, 10)}
+            </span>
+       </a>`
+    ).trim();
+  }
+
   _getMenuItem(item) {
-    return `<a href="#${item.href}"
-               class="main-navigation__${item.className} ${item.isActive ? `main-navigation__item--active` : ``}">
+    return (
+      `<a href="#${item.href}"
+          class="main-navigation__${item.className} ${item.isActive ? `main-navigation__item--active` : ``}">
                ${item.name}
-            </a>`;
+       </a>`
+    ).trim();
   }
 
   _getMenuFilers() {
-    return FILTER_NAMES.map((name) => {
-      return `<a href="#${name}"
-                 class="main-navigation__item">
-                 ${name}
-                <span class="main-navigation__item-count">${getRandomIntegerNumber(1, 10)}</span>
-              </a>`;
-    }).join(`\n`);
+    return FILTER_NAMES.map((name) => this._renderMenuFiler(name)).join(`\n`);
   }
 
   getTemplate() {
-    return `<nav class="main-navigation">
-                <div class="main-navigation__items">
-                    ${this._getMenuItem(SITE_MENU_ITEMS[0])}
-                    ${this._getMenuFilers()}
-                </div>
-                ${this._getMenuItem(SITE_MENU_ITEMS[1])}
-             </nav>`;
+    return (
+      `<nav class="main-navigation">
+            <div class="main-navigation__items">
+                ${this._getMenuItem(SITE_MENU_ITEMS[0])}
+                ${this._getMenuFilers()}
+            </div>
+          ${this._getMenuItem(SITE_MENU_ITEMS[1])}
+       </nav>`
+    ).trim();
   }
 }
