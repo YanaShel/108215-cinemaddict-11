@@ -1,7 +1,4 @@
 import Abstract from "../abstract";
-import FilmDetails from "../film-popup/film-details";
-import {render} from "../../util/dom-util";
-import {Key} from "../../util/util";
 
 const FILM_CARD_BUTTONS = [
   {name: `Add to watchlist`, className: `add-to-watchlist`},
@@ -14,7 +11,11 @@ export default class FilmCard extends Abstract {
     super();
 
     this._film = film;
-    this.getElement().addEventListener(`click`, () => this._onFilmCardClick(this._film));
+    this.setCardClickListener = this.setCardClickListener.bind(this);
+  }
+
+  setCardClickListener(cb) {
+    this.getElement().addEventListener(`click`, () => cb(this._film));
   }
 
   getTemplate() {
@@ -48,33 +49,5 @@ export default class FilmCard extends Abstract {
   _getButtons() {
     return FILM_CARD_BUTTONS.map(({name, className}) => this._renderButton(name, className))
       .join(`\n`);
-  }
-
-  _onFilmCardClick(film) {
-    const bodyElement = document.querySelector(`body`);
-    const filmDetails = new FilmDetails(film);
-    const buttonCloseFilmDetails = filmDetails.getElement().querySelector(`.film-details__close-btn`);
-
-    render(bodyElement, filmDetails);
-    filmDetails.setCloseButtonClickListener(() => {
-      this._closeFilmDetailsPopup(filmDetails.getElement(), buttonCloseFilmDetails);
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    const onEscKeyDown = (evt) => {
-      const isEscKey = evt.key === Key.ESCAPE;
-
-      if (isEscKey) {
-        filmDetails.getElement().remove();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    document.addEventListener(`keydown`, onEscKeyDown);
-  }
-
-  _closeFilmDetailsPopup(popup, btnClose) {
-    popup.remove();
-    btnClose.removeEventListener(`click`, this.closeFilmDetailsPopup);
   }
 }

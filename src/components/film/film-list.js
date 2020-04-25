@@ -1,6 +1,4 @@
 import Abstract from "../abstract";
-import FilmCard from "./film-card";
-import {render} from "../../util/dom-util";
 
 export default class FilmList extends Abstract {
   getTemplate() {
@@ -9,13 +7,6 @@ export default class FilmList extends Abstract {
               <div class="films-list__container">
               </div>
             </section>`;
-  }
-
-  renderFilms(films) {
-    films.forEach((film) => {
-      const filmCard = new FilmCard(film);
-      render(this.getElement().querySelector(`.films-list__container`), filmCard);
-    });
   }
 
   getFilmCardCount() {
