@@ -13,6 +13,18 @@ const FILTER_NAMES = [
 ];
 
 export default class Menu extends Abstract {
+  getTemplate() {
+    return (
+      `<nav class="main-navigation">
+            <div class="main-navigation__items">
+                ${this._getMenuItem(SITE_MENU_ITEMS[0])}
+                ${this._getMenuFilers()}
+            </div>
+          ${this._getMenuItem(SITE_MENU_ITEMS[1])}
+       </nav>`
+    ).trim();
+  }
+
   _renderMenuFiler(name) {
     return (
       `<a href="#${name}"
@@ -36,17 +48,5 @@ export default class Menu extends Abstract {
 
   _getMenuFilers() {
     return FILTER_NAMES.map((name) => this._renderMenuFiler(name)).join(`\n`);
-  }
-
-  getTemplate() {
-    return (
-      `<nav class="main-navigation">
-            <div class="main-navigation__items">
-                ${this._getMenuItem(SITE_MENU_ITEMS[0])}
-                ${this._getMenuFilers()}
-            </div>
-          ${this._getMenuItem(SITE_MENU_ITEMS[1])}
-       </nav>`
-    ).trim();
   }
 }

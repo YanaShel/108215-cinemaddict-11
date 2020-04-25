@@ -20,7 +20,7 @@ const MESSAGES = [
 ];
 
 const generateComment = () => {
-  const DATE = getRandomDate();
+  const DATE = getRandomDate().toLocaleDateString(`en-GB`, {day: `numeric`, month: `long`, year: `numeric`});
   return {
     emotion: getRandomArrayItem(EMOTIONS),
     date: DATE,

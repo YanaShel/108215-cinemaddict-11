@@ -17,6 +17,26 @@ export default class FilmCard extends Abstract {
     this.getElement().addEventListener(`click`, () => this._onFilmCardClick(this._film));
   }
 
+  getTemplate() {
+    const {name, poster, description, comments, year, duration, genres, rating} = this._film;
+    const genreItem = genres[0];
+    return `<article class="film-card">
+              <h3 class="film-card__title">${name}</h3>
+              <p class="film-card__rating">${rating}</p>
+              <p class="film-card__info">
+                <span class="film-card__year">${year}</span>
+                <span class="film-card__duration">${duration}</span>
+                <span class="film-card__genre">${genreItem}</span>
+              </p>
+              <img src="${poster}" alt="" class="film-card__poster">
+              <p class="film-card__description">${description.join(`\n`)}</p>
+              <a class="film-card__comments">${comments.length} comments</a>
+              <form class="film-card__controls">
+                ${this._getButtons()}
+              </form>
+            </article>`;
+  }
+
   _renderButton(name, className) {
     return (`
          <button class="film-card__controls-item button film-card__controls-item--${className}">
@@ -56,25 +76,5 @@ export default class FilmCard extends Abstract {
   _closeFilmDetailsPopup(popup, btnClose) {
     popup.remove();
     btnClose.removeEventListener(`click`, this.closeFilmDetailsPopup);
-  }
-
-  getTemplate() {
-    const {name, poster, description, comments, year, duration, genres, rating} = this._film;
-    const genreItem = genres[0];
-    return `<article class="film-card">
-              <h3 class="film-card__title">${name}</h3>
-              <p class="film-card__rating">${rating}</p>
-              <p class="film-card__info">
-                <span class="film-card__year">${year}</span>
-                <span class="film-card__duration">${duration}</span>
-                <span class="film-card__genre">${genreItem}</span>
-              </p>
-              <img src="${poster}" alt="" class="film-card__poster">
-              <p class="film-card__description">${description.join(`\n`)}</p>
-              <a class="film-card__comments">${comments.length} comments</a>
-              <form class="film-card__controls">
-                ${this._getButtons()}
-              </form>
-            </article>`;
   }
 }

@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomIntegerNumber, getRandomArrayItem, getRandomArrayItems, getRandomDate} from "../util/util";
+import {getRandomNumber, getRandomArrayItem, getRandomArrayItems, getRandomDate} from "../util/util";
 import {generationComments} from "./comments";
 
 const FILM_NAMES = [
@@ -71,11 +71,6 @@ const DESCRIPTIONS = [
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
 
-const Year = {
-  MIN: 1900,
-  MAX: 1970,
-};
-
 const DURATIONS = [
   `1h 55m`,
   `54m`,
@@ -101,8 +96,10 @@ const Rating = {
   MAX: 10,
 };
 
+
 const generateFilm = () => {
   const COMMENTS_COUNT = Math.floor(Math.random() * 20);
+  const fullDate = getRandomDate();
   return {
     name: getRandomArrayItem(FILM_NAMES),
     director: getRandomArrayItem(DIRECTORS),
@@ -112,12 +109,12 @@ const generateFilm = () => {
     actors: getRandomArrayItems(ACTORS),
     country: getRandomArrayItem(COUNTRIES),
     comments: generationComments(COMMENTS_COUNT),
-    year: getRandomIntegerNumber(Year.MIN, Year.MAX),
+    year: fullDate.getFullYear(),
     duration: getRandomArrayItem(DURATIONS),
     genres: getRandomArrayItems(GENRES),
     rating: getRandomNumber(Rating.MIN, Rating.MAX),
     age: getRandomArrayItem(AGE_RATINGS),
-    releaseDate: getRandomDate(),
+    releaseDate: fullDate.toLocaleDateString(`en-GB`, {day: `numeric`, month: `long`, year: `numeric`}),
   };
 };
 
