@@ -18,14 +18,6 @@ export default class FilmCard extends Abstract {
     this.getElement().addEventListener(`click`, () => cb(this._film));
   }
 
-  _renderButton() {
-    return FILM_CARD_BUTTONS.map(({name, className}) => {
-      return `<button class="film-card__controls-item button film-card__controls-item--${className}">
-                   ${name}
-              </button>`;
-    }).join(`\n`);
-  }
-
   getTemplate() {
     const {name, poster, description, comments, year, duration, genres, rating} = this._film;
     const genreItem = genres[0];
@@ -41,8 +33,21 @@ export default class FilmCard extends Abstract {
               <p class="film-card__description">${description.join(`\n`)}</p>
               <a class="film-card__comments">${comments.length} comments</a>
               <form class="film-card__controls">
-                ${this._renderButton()}
+                ${this._getButtons()}
               </form>
             </article>`;
+  }
+
+  _renderButton(name, className) {
+    return (`
+         <button class="film-card__controls-item button film-card__controls-item--${className}">
+             ${name}
+         </button>
+      `).trim();
+  }
+
+  _getButtons() {
+    return FILM_CARD_BUTTONS.map(({name, className}) => this._renderButton(name, className))
+      .join(`\n`);
   }
 }

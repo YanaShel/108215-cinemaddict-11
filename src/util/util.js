@@ -34,9 +34,7 @@ export const getRandomDate = () => {
   const day = getRandomIntegerNumber(1, 32);
   const month = getRandomIntegerNumber(0, 12);
   const year = getRandomIntegerNumber(2000, 2020);
-
   targetDate.setFullYear(year, month, day);
-  const options = {day: `numeric`, month: `long`, year: `numeric`};
-
-  return targetDate.toLocaleDateString(`en-GB`, options);
+  return targetDate;
 };
+
