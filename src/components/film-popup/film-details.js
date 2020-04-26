@@ -25,13 +25,17 @@ const FilmInfo = {
 export default class FilmDetails extends Abstract {
   constructor(film) {
     super();
-
     this._film = film;
+  }
+
+  setCloseButtonClickListener(cb) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, cb);
   }
 
   getTemplate() {
     const {name, poster, description, comments, rating, age} = this._film;
-    return `<section class="film-details">
+    return (
+      `<section class="film-details">
             <form class="film-details__inner" action="" method="get">
               <div class="form-details__top-container">
                 <div class="film-details__close">
@@ -108,11 +112,8 @@ export default class FilmDetails extends Abstract {
                 </section>
               </div>
             </form>
-         </section>`;
-  }
-
-  setCloseButtonClickListener(cb) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, cb);
+         </section>`
+    );
   }
 
   _renderInfo(value, name) {

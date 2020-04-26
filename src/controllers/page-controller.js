@@ -54,6 +54,25 @@ export default class PageController {
     document.addEventListener(`keydown`, onEscKeyDown);
   }
 
+  getSortedFilms(films, sortType, from, to) {
+    let sortedFilms = [];
+    const showingFilms = films.slice();
+
+    switch (sortType) {
+      case `date`:
+        sortedFilms = showingFilms.sort((a, b) => b.year - a.year);
+        break;
+      case `rating`:
+        sortedFilms = showingFilms.sort((a, b) => b.rating - a.rating);
+        break;
+      case `default`:
+        sortedFilms = showingFilms;
+        break;
+    }
+
+    return sortedFilms.slice(from, to);
+  }
+
   renderList(films) {
     const filmBlock = this._filmsBlock.getElement();
 
@@ -80,17 +99,15 @@ export default class PageController {
       }
     });
 
-    this._topRatedList = new TopRatedList(films, (film) => this.onFilmCardClick(film));
-    this._topRatedList.setClickListener((film) => this.onFilmCardClick(film));
+    this._topRatedList = new TopRatedList(films);
+    this._topRatedList.setClickListener(this.onFilmCardClick);
     render(filmBlock, this._topRatedList);
-    this._topRatedList.renderFilms();
 
     this._mostCommentedList = new MostCommentedList(films);
-    this._mostCommentedList.setClickListener((film) => this.onFilmCardClick(film));
+    this._mostCommentedList.setClickListener(this.onFilmCardClick);
     render(filmBlock, this._mostCommentedList);
-    this._mostCommentedList.renderFilms();
 
-    this._sort.setSortTypeChangeHandler((sortType) => {
+    this._sort.setSortTypeChangeListener((sortType) => {
       const sortedFilms = this.getSortedFilms(films, sortType, 0, SHOWING_FILMS_COUNT_BY_BUTTON);
 
       this._filmsList.getElement().querySelector(`.films-list__container`).innerHTML = ``;
@@ -99,24 +116,5 @@ export default class PageController {
 
     });
 
-  }
-
-  getSortedFilms(films, sortType, from, to) {
-    let sortedFilms = [];
-    const showingFilms = films.slice();
-
-    switch (sortType) {
-      case `date`:
-        sortedFilms = showingFilms.sort((a, b) => b.year - a.year);
-        break;
-      case `rating`:
-        sortedFilms = showingFilms.sort((a, b) => b.rating - a.rating);
-        break;
-      case `default`:
-        sortedFilms = showingFilms;
-        break;
-    }
-
-    return sortedFilms.slice(from, to);
   }
 }
