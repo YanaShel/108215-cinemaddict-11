@@ -32,6 +32,21 @@ export default class FilmDetails extends Abstract {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, cb);
   }
 
+  // setWatchlistButtonClickListener(listener) {
+  //   this.getElement().querySelector(`#watchlist`)
+  //     .addEventListener(`click`, listener);
+  // }
+  //
+  // setWatchedButtonClickListener(listener) {
+  //   this.getElement().querySelector(`#watched`)
+  //     .addEventListener(`click`, listener);
+  // }
+  //
+  // setFavoriteButtonClickListener(listener) {
+  //   this.getElement().querySelector(`#favorite`)
+  //     .addEventListener(`click`, listener);
+  // }
+
   getTemplate() {
     const {name, poster, description, comments, rating, age} = this._film;
     return (
@@ -144,13 +159,13 @@ export default class FilmDetails extends Abstract {
   _renderButtonControl(name, id) {
     return (
       `<input type="checkbox"
-                     class="film-details__control-input visually-hidden"
-                     id="${id}"
-                     name="${id}">
-              <label for="${id}"
-                     class="film-details__control-label film-details__control-label--${id}">
-                     ${name}
-              </label>`
+              class="film-details__control-input visually-hidden"
+              id="${id}"
+              name="${id}">
+       <label for="${id}"
+              class="film-details__control-label film-details__control-label--${id}">
+              ${name}
+       </label>`
     ).trim();
 
   }

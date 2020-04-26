@@ -17,6 +17,21 @@ export default class FilmCard extends Abstract {
     this.getElement().addEventListener(`click`, () => cb(this._film));
   }
 
+  // setWatchlistButtonClickListener(listener) {
+  //   this.getElement().querySelector(`.add-to-watchlist`)
+  //     .addEventListener(`click`, listener);
+  // }
+  //
+  // setWatchedButtonClickListener(listener) {
+  //   this.getElement().querySelector(`.mark-as-watched`)
+  //     .addEventListener(`click`, listener);
+  // }
+  //
+  // setFavoriteButtonClickListener(listener) {
+  //   this.getElement().querySelector(`.favorite`)
+  //     .addEventListener(`click`, listener);
+  // }
+
   getTemplate() {
     const {name, poster, description, comments, year, duration, genres, rating} = this._film;
     const genreItem = genres[0];

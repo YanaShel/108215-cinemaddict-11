@@ -13,6 +13,10 @@ export default class Sort extends Abstract {
     this._currenSortType = `default`;
   }
 
+  getSortType() {
+    return this._currenSortType;
+  }
+
   setSortTypeChangeListener(listener) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
