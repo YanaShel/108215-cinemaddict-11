@@ -24,7 +24,7 @@ export default class Page {
     this._noFilmsComponent = new NoFilm();
     this._showMoreButton = new ShowMoreButton();
 
-    // this._onDataCange = this._onDataCange.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._sort.setSortTypeChangeListener(this._onSortTypeChange);
   }
@@ -43,7 +43,7 @@ export default class Page {
       return;
     }
 
-    const newFilms = this._renderFilms(filmsList, films.slice(0, SHOWING_FILMS_COUNT_ON_START));
+    const newFilms = this._renderFilms(filmsList, films.slice(0, this._showingFilmsCount), this._onDataChange);
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
     this._renderShowMoreButton();
@@ -79,7 +79,7 @@ export default class Page {
       this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
       const sortedFilms = this._getSortedFilms(this._films, this._sort.getSortType(), prevFilmsCount, this._showingFilmsCount);
-      const newFilms = this._renderFilms(this._filmsList.getElement(), sortedFilms);
+      const newFilms = this._renderFilms(this._filmsList.getElement(), sortedFilms, this._onDataChange);
 
       this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
@@ -108,6 +108,18 @@ export default class Page {
     return sortedFilms.slice(from, to);
   }
 
+  _onDataChange(movieController, oldData, newData) {
+    const index = this._films.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
+
+    movieController.render(this._films[index]);
+  }
+
   _onSortTypeChange(sortType) {
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
 
@@ -115,7 +127,7 @@ export default class Page {
 
     this._filmsList.getElement().querySelector(`.films-list__container`).innerHTML = ``;
 
-    const newFilms = this._renderFilms(this._filmsList.getElement(), sortedFilms);
+    const newFilms = this._renderFilms(this._filmsList.getElement(), sortedFilms, this._onDataChange);
     this._showedFilmControllers = newFilms;
 
     this._renderShowMoreButton();

@@ -1,13 +1,14 @@
 import FilmCard from "../components/film/film-card";
 import FilmDetails from "../components/film-popup/film-details";
-import {render} from "../util/dom-util";
+import {render, replace} from "../util/dom-util";
 import {Key} from "../util/util";
 
 const bodyElement = document.querySelector(`body`);
 
 export default class Movie {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
+    this._onDataChange = onDataChange;
 
     this._fimCard = null;
     this._filmDetails = null;
@@ -17,16 +18,38 @@ export default class Movie {
   }
 
   render(film) {
+    const oldFilmCard = this._fimCard;
+    const oldFilmDetails = this._filmDetails;
+
     this._fimCard = new FilmCard(film);
     this._filmDetails = new FilmDetails(film);
 
     this._fimCard.setCardClickListener(this._onFilmCardClick);
-    // this._fimCard.setWatchlistButtonClickListener(() => {});
-    // this._fimCard.setWatchedButtonClickListener(() => {});
-    // this._fimCard.setFavoriteButtonClickListener(() => {});
 
-    render(this._container.querySelector(`.films-list__container`), this._fimCard);
+    this._fimCard.setWatchlistButtonClickListener((evt) => {
+      evt.stopPropagation();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatchlist: !film.isWatchlist}));
+    });
 
+    this._fimCard.setWatchedButtonClickListener((evt) => {
+      evt.stopPropagation();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatched: !film.isWatched}));
+    });
+
+    this._fimCard.setFavoriteButtonClickListener((evt) => {
+      evt.stopPropagation();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite}));
+    });
+
+    if (oldFilmCard && oldFilmDetails) {
+      replace(this._fimCard, oldFilmCard);
+      replace(this._filmDetails, oldFilmDetails);
+    } else {
+      render(this._container.querySelector(`.films-list__container`), this._fimCard);
+    }
   }
 
   _onEscKeyDown(evt) {
@@ -52,6 +75,8 @@ export default class Movie {
       this._closeFilmDetailsPopup(this._filmDetails.getElement(), buttonCloseFilmDetails);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
+
+
     // this._filmDetails.setWatchlistButtonClickListener(() => {});
     // this._filmDetails.setWatchedButtonClickListener(()=> {});
     // this._filmDetails.setFavoriteButtonClickListener(() => {});
