@@ -26,6 +26,7 @@ export default class Page {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
     this._sort.setSortTypeChangeListener(this._onSortTypeChange);
   }
 
@@ -43,12 +44,12 @@ export default class Page {
       return;
     }
 
-    const newFilms = this._renderFilms(filmsList, films.slice(0, this._showingFilmsCount), this._onDataChange);
+    const newFilms = this._renderFilms(filmsList, films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
     this._renderShowMoreButton();
 
-    // todo где нужно передавать listener. В movie?
+    // todo где нужно передавать listener для topRatedList и mostCommentedList. В movie?
     this._topRatedList = new TopRatedList(films);
     this._topRatedList.setClickListener(this._onFilmCardClick);
     render(filmBlock, this._topRatedList);
@@ -58,9 +59,9 @@ export default class Page {
     render(filmBlock, this._mostCommentedList);
   }
 
-  _renderFilms(filmListElement, films, onDataChange) {
+  _renderFilms(filmListElement, films, onDataChange, onViewChange) {
     return films.map((film) => {
-      const movie = new Movie(filmListElement, onDataChange);
+      const movie = new Movie(filmListElement, onDataChange, onViewChange);
       movie.render(film);
 
       return movie;
@@ -79,7 +80,7 @@ export default class Page {
       this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
       const sortedFilms = this._getSortedFilms(this._films, this._sort.getSortType(), prevFilmsCount, this._showingFilmsCount);
-      const newFilms = this._renderFilms(this._filmsList.getElement(), sortedFilms, this._onDataChange);
+      const newFilms = this._renderFilms(this._filmsList.getElement(), sortedFilms, this._onDataChange, this._onViewChange);
 
       this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
@@ -127,9 +128,13 @@ export default class Page {
 
     this._filmsList.getElement().querySelector(`.films-list__container`).innerHTML = ``;
 
-    const newFilms = this._renderFilms(this._filmsList.getElement(), sortedFilms, this._onDataChange);
+    const newFilms = this._renderFilms(this._filmsList.getElement(), sortedFilms, this._onDataChange, this._onViewChange);
     this._showedFilmControllers = newFilms;
 
     this._renderShowMoreButton();
+  }
+
+  _onViewChange() {
+    this._showedFilmControllers.forEach((it) => it._setDefaultView());
   }
 }

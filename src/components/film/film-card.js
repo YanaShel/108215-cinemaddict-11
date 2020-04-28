@@ -66,9 +66,4 @@ export default class FilmCard extends Abstract {
          </button>
       `).trim();
   }
-
-  // _getButtons() {
-  //   return FILM_CARD_BUTTONS.map(({name, className}, i) => this._renderButton(name, className, false))
-  //     .join(`\n`);
-  // }
 }

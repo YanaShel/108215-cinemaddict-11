@@ -3,13 +3,12 @@ import FilmDetails from "../components/film-popup/film-details";
 import {render, replace} from "../util/dom-util";
 import {Key} from "../util/util";
 
-const bodyElement = document.querySelector(`body`);
-
 export default class Movie {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
-
+    this._onViewChange = onViewChange;
+    this._bodyElement = document.querySelector(`body`);
     this._fimCard = null;
     this._filmDetails = null;
 
@@ -58,13 +57,13 @@ export default class Movie {
     }
   }
 
-  _closeFilmDetailsPopup(popup, btnClose) {
-    popup.remove();
-    btnClose.removeEventListener(`click`, this._closeFilmDetailsPopup);
+  _closeFilmDetailsPopup() {
+    this._filmDetails.getElement().remove();
   }
 
   _onFilmCardClick() {
-    render(bodyElement, this._filmDetails);
+    this._onViewChange();
+    render(this._bodyElement, this._filmDetails);
     const buttonCloseFilmDetails = this._filmDetails.getElement().querySelector(`.film-details__close-btn`);
 
     document.addEventListener(`keydown`, this._onEscKeyDown);
@@ -72,5 +71,9 @@ export default class Movie {
       this._closeFilmDetailsPopup(this._filmDetails.getElement(), buttonCloseFilmDetails);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
+  }
+
+  _setDefaultView() {
+    this._closeFilmDetailsPopup();
   }
 }
