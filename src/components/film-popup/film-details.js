@@ -1,4 +1,4 @@
-import Abstract from "../abstract";
+import AbstractSmart from "../abstract-smart";
 
 const EMOJI_NAMES = [
   `smile`,
@@ -22,29 +22,13 @@ const FilmInfo = {
   country: `Country`,
 };
 
-export default class FilmDetails extends Abstract {
+export default class FilmDetails extends AbstractSmart {
   constructor(film) {
     super();
     this._film = film;
-  }
 
-  setCloseButtonClickListener(cb) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, cb);
-  }
-
-  setWatchlistButtonClickListener(listener) {
-    this.getElement().querySelector(`#watchlist`)
-      .addEventListener(`click`, listener);
-  }
-
-  setWatchedButtonClickListener(listener) {
-    this.getElement().querySelector(`#watched`)
-      .addEventListener(`click`, listener);
-  }
-
-  setFavoriteButtonClickListener(listener) {
-    this.getElement().querySelector(`#favorite`)
-      .addEventListener(`click`, listener);
+    this._closePopupListener = null;
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
@@ -129,6 +113,54 @@ export default class FilmDetails extends Abstract {
             </form>
          </section>`
     );
+  }
+
+  recoveryListeners() {
+    this.setCloseButtonClickListener(this._closePopupListener);
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  setCloseButtonClickListener(listener) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, listener);
+    this._closePopupListener = listener;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`#watchlist`).addEventListener(`click`, () => {
+      this._film.isWatchlist = !this._film.isWatchlist;
+      this.rerender();
+    });
+
+    element.querySelector(`#watched`).addEventListener(`click`, () => {
+      this._film.isWatched = !this._film.isWatched;
+      this.rerender();
+    });
+
+    element.querySelector(`#favorite`).addEventListener(`click`, () => {
+      this._film.isFavorite = !this._film.isFavorite;
+      this.rerender();
+    });
+
+    const emoji = element.querySelector(`.film-details__emoji-list`);
+    if (emoji) {
+      emoji.addEventListener(`change`, (evt) => {
+        const emojiContainer = element.querySelector(`.film-details__add-emoji-label`);
+        let imgEmoji = emojiContainer.querySelector(`img`);
+        if (!imgEmoji) {
+          imgEmoji = document.createElement(`img`);
+        }
+        imgEmoji.src = `./images/emoji/${evt.target.value}.png`;
+        imgEmoji.width = 55;
+        imgEmoji.height = 55;
+        emojiContainer.append(imgEmoji);
+      });
+    }
   }
 
   _renderInfo(value, name) {
