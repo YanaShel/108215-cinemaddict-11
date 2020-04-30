@@ -5,33 +5,47 @@ import {render} from "../../../util/dom-util";
 export default class MostCommentedList extends Abstract {
   constructor(films) {
     super();
-
-    this._films = films;
-    this.setClickListener = this.setClickListener.bind(this);
-    this._mostComentedFilms = this._getCommentedFilms(this._films).slice(0, 2);
+    this._clickListener = null;
+    this._mostCommentedFilms = this._getMostCommentedFilms(films);
   }
 
-  _getCommentedFilms(films) {
-    const copyFilms = films.slice();
-    return copyFilms.sort((firstFilm, secondFilm) => secondFilm.comments.length - firstFilm.comments.length);
-  }
-
-  setClickListener(cb) {
-    this.getElement().addEventListener(`click`, () => cb(this._mostComentedFilms));
-  }
-
-  renderFilms() {
-    this._mostComentedFilms.forEach((film) => {
-      const filmCard = new FilmCard(film);
-      render(this.getElement().querySelector(`.films-list__container`), filmCard);
-    });
+  setClickListener(listener) {
+    this._clickListener = listener;
   }
 
   getTemplate() {
-    return `<section class="films-list--extra">
-              <h2 class="films-list__title">Most commented</h2>
-              <div class="films-list__container">
-              </div>
-           </section>`;
+    return (
+      `<section class="films-list--extra">
+            <h2 class="films-list__title">Most commented</h2>
+            <div class="films-list__container">
+            </div>
+       </section>`
+    ).trim();
+  }
+
+  getElement() {
+    const mostCommentedBlock = super.getElement();
+    const container = mostCommentedBlock.querySelector(`.films-list__container`);
+    this._mostCommentedFilms.forEach((filmCard) => {
+      render(container, filmCard);
+    });
+    return mostCommentedBlock;
+  }
+
+  _getMostCommentedFilms(films) {
+    return films.slice()
+      .sort((firstFilm, secondFilm) => secondFilm.comments.length - firstFilm.comments.length)
+      .slice(0, 2)
+      .map((currentFilm) => {
+        const card = new FilmCard(currentFilm);
+        card.setCardClickListener((film) => this._handlerCardClick(film));
+        return card;
+      });
+  }
+
+  _handlerCardClick(film) {
+    if (typeof this._clickListener === `function`) {
+      this._clickListener(film);
+    }
   }
 }

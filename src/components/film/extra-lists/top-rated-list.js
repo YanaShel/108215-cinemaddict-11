@@ -5,32 +5,47 @@ import {render} from "../../../util/dom-util";
 export default class TopRatedList extends Abstract {
   constructor(films) {
     super();
+    this._clickListener = null;
+    this._topRatedFilms = this._getTopRatedFilms(films);
+  }
 
-    this.setClickListener = this.setClickListener.bind(this);
-    this._topRatedFilms = this._getRatedFilms(films).slice(0, 2);
+  setClickListener(listener) {
+    this._clickListener = listener;
   }
 
   getTemplate() {
-    return `<section class="films-list--extra">
+    return (
+      `<section class="films-list--extra">
               <h2 class="films-list__title">Top rated</h2>
               <div class="films-list__container">
               </div>
-           </section>`;
+           </section>`
+    ).trim();
   }
 
-  renderFilms() {
-    this._topRatedFilms.forEach((film) => {
-      const filmCard = new FilmCard(film);
-      render(this.getElement().querySelector(`.films-list__container`), filmCard);
+  getElement() {
+    const topRatedBlock = super.getElement();
+    const container = topRatedBlock.querySelector(`.films-list__container`);
+    this._topRatedFilms.forEach((filmCard) => {
+      render(container, filmCard);
     });
+    return topRatedBlock;
   }
 
-  setClickListener(cb) {
-    this.getElement().addEventListener(`click`, () => cb(this._topRatedFilms));
+  _getTopRatedFilms(films) {
+    return films.slice()
+      .sort((firstFilm, secondFilm) => secondFilm.rating - firstFilm.rating)
+      .slice(0, 2)
+      .map((currentFilm) => {
+        const card = new FilmCard(currentFilm);
+        card.setCardClickListener((film) => this._handlerCardClick(film));
+        return card;
+      });
   }
 
-  _getRatedFilms(films) {
-    const copyFilms = films.slice();
-    return copyFilms.sort((firstFilm, secondFilm) => secondFilm.rating - firstFilm.rating);
+  _handlerCardClick(film) {
+    if (typeof this._clickListener === `function`) {
+      this._clickListener(film);
+    }
   }
 }

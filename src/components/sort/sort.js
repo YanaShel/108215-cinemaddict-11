@@ -13,15 +13,11 @@ export default class Sort extends Abstract {
     this._currenSortType = `default`;
   }
 
-  getTemplate() {
-    return (
-      `<ul class="sort">
-           ${this._getSortItems()}
-       </ul>`
-    ).trim();
+  getSortType() {
+    return this._currenSortType;
   }
 
-  setSortTypeChangeHandler(handler) {
+  setSortTypeChangeListener(listener) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 
@@ -39,8 +35,16 @@ export default class Sort extends Abstract {
 
       this._currenSortType = sortType;
 
-      handler(this._currenSortType);
+      listener(this._currenSortType);
     });
+  }
+
+  getTemplate() {
+    return (
+      `<ul class="sort">
+           ${this._getSortItems()}
+       </ul>`
+    ).trim();
   }
 
   _renderSortItem(dataAttribute, name, i) {

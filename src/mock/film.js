@@ -115,6 +115,10 @@ const generateFilm = () => {
     rating: getRandomNumber(Rating.MIN, Rating.MAX),
     age: getRandomArrayItem(AGE_RATINGS),
     releaseDate: fullDate.toLocaleDateString(`en-GB`, {day: `numeric`, month: `long`, year: `numeric`}),
+    isWatchlist: Math.random() > 0.5,
+    isWatched: Math.random() > 0.5,
+    isFavorite: Math.random() > 0.5,
+    emoji: null,
   };
 };
 

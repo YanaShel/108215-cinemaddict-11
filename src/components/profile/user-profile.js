@@ -3,7 +3,6 @@ import Abstract from "../abstract";
 export default class UserProfile extends Abstract {
   constructor(user) {
     super();
-
     this._user = user;
   }
 
