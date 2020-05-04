@@ -49,14 +49,13 @@ export default class PageController {
 
     this._renderShowMoreButton();
 
-    // todo где нужно передавать listener для topRatedList и mostCommentedList. В movie?
     this._topRatedList = new TopRatedList(films);
-    this._topRatedList.setClickListener(this._onFilmCardClick);
     render(filmBlock, this._topRatedList);
+    this._renderFilms(this._topRatedList.getElement(), this._getTopRatedFilms(this._films), this._onDataChange, this._onViewChange);
 
-    this._mostCommentedList = new MostCommentedList(films);
-    this._mostCommentedList.setClickListener(this._onFilmCardClick);
+    this._mostCommentedList = new MostCommentedList();
     render(filmBlock, this._mostCommentedList);
+    this._renderFilms(this._mostCommentedList.getElement(), this._getMostCommentedFilms(this._films), this._onDataChange, this._onViewChange);
   }
 
   _renderFilms(filmListElement, films, onDataChange, onViewChange) {
@@ -88,6 +87,18 @@ export default class PageController {
         remove(this._showMoreButton);
       }
     });
+  }
+
+  _getMostCommentedFilms(films) {
+    return films.slice()
+      .sort((firstFilm, secondFilm) => secondFilm.comments.length - firstFilm.comments.length)
+      .slice(0, 2);
+  }
+
+  _getTopRatedFilms(films) {
+    return films.slice()
+      .sort((firstFilm, secondFilm) => secondFilm.rating - firstFilm.rating)
+      .slice(0, 2);
   }
 
   _getSortedFilms(films, sortType, from, to) {
