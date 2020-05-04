@@ -1,4 +1,4 @@
-import AbstractSmart from "../abstract-smart";
+import AbstractSmart from "../abstract-smart-component";
 
 const EMOJI_NAMES = [
   `smile`,
@@ -28,7 +28,10 @@ export default class FilmDetails extends AbstractSmart {
     this._film = film;
 
     this._closePopupListener = null;
-    this._subscribeOnEvents();
+    this.setWatchlistPopupBtnClickListener();
+    this.setWatchedPopupBtnClickListener();
+    this.setFavoritePopupBtnClickListener();
+    this.setEmojiClickListener();
   }
 
   getTemplate() {
@@ -69,8 +72,8 @@ export default class FilmDetails extends AbstractSmart {
                     </div>
 
                     <table class="film-details__table">
-                        ${this._getInfo()}
-                        ${this._getGenre()}
+                        ${this._getFilmInfo()}
+                        ${this._createGenresMarkup()}
                     </table>
 
                     <p class="film-details__film-description">
@@ -117,7 +120,10 @@ export default class FilmDetails extends AbstractSmart {
 
   recoveryListeners() {
     this.setCloseButtonClickListener(this._closePopupListener);
-    this._subscribeOnEvents();
+    this.setWatchlistPopupBtnClickListener();
+    this.setWatchedPopupBtnClickListener();
+    this.setFavoritePopupBtnClickListener();
+    this.setEmojiClickListener();
   }
 
   rerender() {
@@ -125,45 +131,32 @@ export default class FilmDetails extends AbstractSmart {
   }
 
   setCloseButtonClickListener(listener) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, listener);
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, listener);
     this._closePopupListener = listener;
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
-
-    element.querySelector(`#watchlist`).addEventListener(`click`, () => {
-      this._film.isWatchlist = !this._film.isWatchlist;
-      this.rerender();
-    });
-
-    element.querySelector(`#watched`).addEventListener(`click`, () => {
-      this._film.isWatched = !this._film.isWatched;
-      this.rerender();
-    });
-
-    element.querySelector(`#favorite`).addEventListener(`click`, () => {
-      this._film.isFavorite = !this._film.isFavorite;
-      this.rerender();
-    });
-
-    const emoji = element.querySelector(`.film-details__emoji-list`);
-    if (emoji) {
-      emoji.addEventListener(`change`, (evt) => {
-        const emojiContainer = element.querySelector(`.film-details__add-emoji-label`);
-        let imgEmoji = emojiContainer.querySelector(`img`);
-        if (!imgEmoji) {
-          imgEmoji = document.createElement(`img`);
-        }
-        imgEmoji.src = `./images/emoji/${evt.target.value}.png`;
-        imgEmoji.width = 55;
-        imgEmoji.height = 55;
-        emojiContainer.append(imgEmoji);
-      });
-    }
+  setWatchlistPopupBtnClickListener(listener) {
+    this.getElement().querySelector(`#watchlist`)
+      .addEventListener(`click`, listener);
   }
 
-  _renderInfo(value, name) {
+  setWatchedPopupBtnClickListener(listener) {
+    this.getElement().querySelector(`#watched`)
+      .addEventListener(`click`, listener);
+  }
+
+  setFavoritePopupBtnClickListener(listener) {
+    this.getElement().querySelector(`#favorite`)
+      .addEventListener(`click`, listener);
+  }
+
+  setEmojiClickListener(listener) {
+    this.getElement().querySelector(`.film-details__emoji-list`)
+      .addEventListener(`change`, listener);
+  }
+
+  _createFilmInfoMarkup(value, name) {
     return (`
          <tr class="film-details__row">
             <td class="film-details__term">
@@ -175,20 +168,29 @@ export default class FilmDetails extends AbstractSmart {
          </tr>
       `).trim();
   }
+  _getFilmInfo() {
+    return Object.entries(FilmInfo).map(([value, name]) => this._createFilmInfoMarkup(value, name)).join(`\n`);
+  }
 
-  _renderGenre(genre) {
+  _createGenreMarkup(genre) {
     return (
       `<span class="film-details__genre">
             ${genre}
        </span>`
     ).trim();
   }
-
-  _renderGenres() {
-    return this._film.genres.map((genre) => this._renderGenre(genre)).join(`\n`);
+  _getGenres() {
+    return this._film.genres.map((genre) => this._createGenreMarkup(genre)).join(`\n`);
+  }
+  _createGenresMarkup() {
+    return `<tr class="film-details__row">
+              <td class="film-details__term">Genres</td>
+              <td class="film-details__cell">${this._getGenres()}
+              </td>
+            </tr>`;
   }
 
-  _renderButtonControl(name, id) {
+  _createButtonControlMarkup(name, id) {
     return (
       `<input type="checkbox"
               class="film-details__control-input visually-hidden"
@@ -201,8 +203,11 @@ export default class FilmDetails extends AbstractSmart {
     ).trim();
 
   }
+  _getButtonsControl() {
+    return FILM_DETAILS_BUTTONS.map(({name, id}) => this._createButtonControlMarkup(name, id)).join(`\n`);
+  }
 
-  _renderComment(emotion, author, date, message) {
+  _createCommentMarkup(emotion, author, date, message) {
     return (
       `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
@@ -219,8 +224,11 @@ export default class FilmDetails extends AbstractSmart {
          </li>`
     ).trim();
   }
+  _getComments() {
+    return this._film.comments.map(({emotion, author, date, message}) => this._createCommentMarkup(emotion, author, date, message)).join(`\n`);
+  }
 
-  _renderEmoji(name) {
+  _createEmojiMarkup(name) {
     return (
       `<input class="film-details__emoji-item visually-hidden"
               name=" comment-emoji"
@@ -233,28 +241,8 @@ export default class FilmDetails extends AbstractSmart {
        </label>`
     ).trim();
   }
-
-  _getInfo() {
-    return Object.entries(FilmInfo).map(([value, name]) => this._renderInfo(value, name)).join(`\n`);
-  }
-
-  _getGenre() {
-    return `<tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
-              <td class="film-details__cell">${this._renderGenres()}
-              </td>
-            </tr>`;
-  }
-
-  _getButtonsControl() {
-    return FILM_DETAILS_BUTTONS.map(({name, id}) => this._renderButtonControl(name, id)).join(`\n`);
-  }
-
-  _getComments() {
-    return this._film.comments.map(({emotion, author, date, message}) => this._renderComment(emotion, author, date, message)).join(`\n`);
-  }
-
   _getEmoji() {
-    return EMOJI_NAMES.map((name) => this._renderEmoji(name)).join(`\n`);
+    return EMOJI_NAMES.map((name) => this._createEmojiMarkup(name)).join(`\n`);
   }
+
 }

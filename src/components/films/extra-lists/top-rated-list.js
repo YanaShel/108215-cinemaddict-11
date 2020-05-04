@@ -1,8 +1,8 @@
-import Abstract from "../../abstract";
+import AbstractComponent from "../../abstract-component";
 import FilmCard from "../film-card";
 import {render} from "../../../util/dom-util";
 
-export default class TopRatedList extends Abstract {
+export default class TopRatedList extends AbstractComponent {
   constructor(films) {
     super();
     this._clickListener = null;

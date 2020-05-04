@@ -1,6 +1,6 @@
-import Abstract from "../abstract";
+import AbstractComponent from "../../abstract-component";
 
-export default class FilmList extends Abstract {
+export default class FilmList extends AbstractComponent {
   getFilmCardCount() {
     return this.getElement().querySelector(`.films-list__container`).querySelectorAll(`.film-card`).length;
   }

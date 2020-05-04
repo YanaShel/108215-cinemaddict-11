@@ -1,17 +1,17 @@
 import Sort from "../components/sort/sort";
-import FilmList from "../components/film/film-list";
-import NoFilm from "../components/film/no-films";
-import ShowMoreButton from "../components/film/show-more-button";
-import TopRatedList from "../components/film/extra-lists/top-rated-list";
-import MostCommentedList from "../components/film/extra-lists/most-commented-list";
-import FilmsBlock from "../components/film/films-block";
-import Movie from "./movie";
+import FilmList from "../components/films/main-list/film-list";
+import NoFilm from "../components/films/no-films";
+import ShowMoreButton from "../components/films/main-list/show-more-button";
+import TopRatedList from "../components/films/extra-lists/top-rated-list";
+import MostCommentedList from "../components/films/extra-lists/most-commented-list";
+import FilmsBlock from "../components/films/films-block";
+import MovieController from "./movie-сontroller";
 import {remove, render} from "../util/dom-util";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
-export default class Page {
+export default class PageController {
   constructor(container) {
     this._container = container;
 
@@ -61,7 +61,7 @@ export default class Page {
 
   _renderFilms(filmListElement, films, onDataChange, onViewChange) {
     return films.map((film) => {
-      const movie = new Movie(filmListElement, onDataChange, onViewChange);
+      const movie = new MovieController(filmListElement, onDataChange, onViewChange);
       movie.render(film);
 
       return movie;

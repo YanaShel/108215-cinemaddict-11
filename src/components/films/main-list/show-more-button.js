@@ -1,6 +1,6 @@
-import Abstract from "../abstract";
+import AbstractComponent from "../../abstract-component";
 
-export default class ShowMoreButton extends Abstract {
+export default class ShowMoreButton extends AbstractComponent {
   setClickListener(cb) {
     this.getElement().addEventListener(`click`, cb);
   }
