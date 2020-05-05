@@ -10,27 +10,34 @@ export default class FilmCard extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
+    this._name = film.name;
+    this._poster = film.poster;
+    this._description = film.description;
+    this._comments = film.comments;
+    this._year = film.year;
+    this._duration = film.duration;
+    this._genres = film.genres;
+    this._rating = film.rating;
+
     this.setCardClickListener = this.setCardClickListener.bind(this);
   }
 
   getTemplate() {
-    const {name, poster, description, comments, year, duration, genres, rating} = this._film;
-    const genreItem = genres[0];
     const watchlistButton = this._createButtonMarkup(FILM_CARD_BUTTONS[0].name, FILM_CARD_BUTTONS[0].className, this._film.isWatchlist);
     const watchedButton = this._createButtonMarkup(FILM_CARD_BUTTONS[1].name, FILM_CARD_BUTTONS[1].className, this._film.isWatched);
     const favoriteButton = this._createButtonMarkup(FILM_CARD_BUTTONS[2].name, FILM_CARD_BUTTONS[2].className, this._film.isFavorite);
     return (
       `<article class="film-card">
-            <h3 class="film-card__title">${name}</h3>
-            <p class="film-card__rating">${rating}</p>
+            <h3 class="film-card__title">${this._name}</h3>
+            <p class="film-card__rating">${this._rating}</p>
             <p class="film-card__info">
-                <span class="film-card__year">${year}</span>
-                <span class="film-card__duration">${duration}</span>
-                <span class="film-card__genre">${genreItem}</span>
+                <span class="film-card__year">${this._year}</span>
+                <span class="film-card__duration">${this._duration}</span>
+                <span class="film-card__genre">${this._genres[0]}</span>
             </p>
-            <img src="${poster}" alt="" class="film-card__poster">
-            <p class="film-card__description">${description.join(`\n`)}</p>
-            <a class="film-card__comments">${comments.length} comments</a>
+            <img src="${this._poster}" alt="" class="film-card__poster">
+            <p class="film-card__description">${this._description.join(`\n`)}</p>
+            <a class="film-card__comments">${this._comments.length} comments</a>
             <form class="film-card__controls">
                 ${watchlistButton}
                 ${watchedButton}

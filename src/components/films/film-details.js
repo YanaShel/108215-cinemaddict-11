@@ -26,6 +26,13 @@ export default class FilmDetails extends AbstractSmart {
   constructor(film) {
     super();
     this._film = film;
+    this._name = film.name;
+    this._poster = film.poster;
+    this._description = film.description;
+    this._comments = film.comments;
+    this._genres = film.genres;
+    this._rating = film.rating;
+    this._age = film.age;
 
     this._closePopupListener = null;
     this.setWatchlistPopupBtnClickListener();
@@ -35,7 +42,6 @@ export default class FilmDetails extends AbstractSmart {
   }
 
   getTemplate() {
-    const {name, poster, description, comments, rating, age} = this._film;
     return (
       `<section class="film-details">
             <form class="film-details__inner" action="" method="get">
@@ -46,10 +52,10 @@ export default class FilmDetails extends AbstractSmart {
                 <div class="film-details__info-wrap">
                   <div class="film-details__poster">
                     <img class="film-details__poster-img" src="
-                        ${poster}
+                        ${this._poster}
                     " alt="">
                     <p class="film-details__age">
-                        ${age}
+                        ${this._age}
                     </p>
                   </div>
 
@@ -57,16 +63,16 @@ export default class FilmDetails extends AbstractSmart {
                     <div class="film-details__info-head">
                       <div class="film-details__title-wrap">
                         <h3 class="film-details__title">
-                            ${name}
+                            ${this._name}
                         </h3>
                         <p class="film-details__title-original">Original:
-                            ${name}
+                            ${this._name}
                         </p>
                       </div>
 
                       <div class="film-details__rating">
                         <p class="film-details__total-rating">
-                            ${rating}
+                            ${this._rating}
                         </p>
                       </div>
                     </div>
@@ -77,7 +83,7 @@ export default class FilmDetails extends AbstractSmart {
                     </table>
 
                     <p class="film-details__film-description">
-                        ${description.join(`\n`)}
+                        ${this._description.join(`\n`)}
                     </p>
                   </div>
                 </div>
@@ -91,7 +97,7 @@ export default class FilmDetails extends AbstractSmart {
                 <section class="film-details__comments-wrap">
                   <h3 class="film-details__comments-title">Comments
                     <span class="film-details__comments-count">
-                        ${comments.length}
+                        ${this._comments.length}
                     </span>
                   </h3>
 
@@ -180,7 +186,7 @@ export default class FilmDetails extends AbstractSmart {
     ).trim();
   }
   _getGenres() {
-    return this._film.genres.map((genre) => this._createGenreMarkup(genre)).join(`\n`);
+    return this._genres.map((genre) => this._createGenreMarkup(genre)).join(`\n`);
   }
   _createGenresMarkup() {
     return `<tr class="film-details__row">
@@ -225,7 +231,7 @@ export default class FilmDetails extends AbstractSmart {
     ).trim();
   }
   _getComments() {
-    return this._film.comments.map(({emotion, author, date, message}) => this._createCommentMarkup(emotion, author, date, message)).join(`\n`);
+    return this._comments.map(({emotion, author, date, message}) => this._createCommentMarkup(emotion, author, date, message)).join(`\n`);
   }
 
   _createEmojiMarkup(name) {

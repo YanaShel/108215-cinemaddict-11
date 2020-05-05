@@ -21,7 +21,7 @@ export default class PageController {
     this._sort = new Sort();
     this._filmsBlock = new FilmsBlock();
     this._filmsList = new FilmList();
-    this._noFilmsComponent = new NoFilm();
+    this._noFilm = new NoFilm();
     this._showMoreButton = new ShowMoreButton();
 
     this._onDataChange = this._onDataChange.bind(this);
@@ -40,7 +40,7 @@ export default class PageController {
     render(filmBlock, this._filmsList);
 
     if (films.length === 0) {
-      render(filmsList, new NoFilm());
+      render(filmsList, this._noFilm);
       return;
     }
 
