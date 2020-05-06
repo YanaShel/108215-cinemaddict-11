@@ -1,5 +1,8 @@
 import AbstractSmartComponent from "../../abstract-smart-component";
+import FilmDetailsGenre from "./film-details-genre";
+import FilmDetailsButton from "./film-details-button";
 import FilmDetailsComment from "./film-details-comment";
+import FilmDetailsEmoji from "./film-details-emoji";
 import {formatFilmDuration, formatDate} from "../../../util/date";
 
 const EMOJI_NAMES = [
@@ -39,13 +42,11 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setEmojiClickListener();
   }
 
-  _getSortComments() {
-    return this._comments.slice()
-      .sort((a, b) => b.date - a.date);
-  }
-
   getTemplate() {
+    const genresMarkup = this._genres.map((genre) => new FilmDetailsGenre(genre).getTemplate()).join(`\n`);
     const commentsMarkup = this._getSortComments().map((comment) => new FilmDetailsComment(comment).getTemplate()).join(`\n`);
+    const emojiMarkUp = EMOJI_NAMES.map((name) => new FilmDetailsEmoji(name).getTemplate()).join(`\n`);
+    const buttonsMarkUp = FILM_DETAILS_BUTTONS.map((button) => new FilmDetailsButton(button).getTemplate()).join(`\n`);
 
     return (
       `<section class="film-details">
@@ -107,7 +108,10 @@ export default class FilmDetails extends AbstractSmartComponent {
                             <td class="film-details__term">Country</td>
                             <td class="film-details__cell">${this._country}</td>
                         </tr>
-                            ${this._createGenresMarkup()}
+                        <tr class="film-details__row">
+                            <td class="film-details__term">Genres</td>
+                            <td class="film-details__cell">${genresMarkup}</td>
+                        </tr>
                     </table>
 
                     <p class="film-details__film-description">
@@ -117,7 +121,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                 </div>
 
                 <section class="film-details__controls">
-                    ${this._getButtonsControl()}
+                    ${buttonsMarkUp}
                 </section>
               </div>
 
@@ -142,7 +146,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                     </label>
 
                     <div class="film-details__emoji-list">
-                        ${this._getEmoji()}
+                        ${emojiMarkUp}
                     </div>
                   </div>
                 </section>
@@ -190,56 +194,9 @@ export default class FilmDetails extends AbstractSmartComponent {
       .addEventListener(`change`, listener);
   }
 
-  _createGenreMarkup(genre) {
-    return (
-      `<span class="film-details__genre">
-            ${genre}
-       </span>`
-    ).trim();
-  }
-  _getGenres() {
-    return this._genres.map((genre) => this._createGenreMarkup(genre)).join(`\n`);
-  }
-  _createGenresMarkup() {
-    return `<tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
-              <td class="film-details__cell">${this._getGenres()}
-              </td>
-            </tr>`;
-  }
-
-  _createButtonControlMarkup(name, id) {
-    return (
-      `<input type="checkbox"
-              class="film-details__control-input visually-hidden"
-              id="${id}"
-              name="${id}">
-       <label for="${id}"
-              class="film-details__control-label film-details__control-label--${id}">
-              ${name}
-       </label>`
-    ).trim();
-
-  }
-  _getButtonsControl() {
-    return FILM_DETAILS_BUTTONS.map(({name, id}) => this._createButtonControlMarkup(name, id)).join(`\n`);
-  }
-
-  _createEmojiMarkup(name) {
-    return (
-      `<input class="film-details__emoji-item visually-hidden"
-              name=" comment-emoji"
-              type="radio"
-              id="emoji-${name}"
-              value="${name}">
-       <label class="film-details__emoji-label"
-              for="emoji-${name}">
-              <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji">
-       </label>`
-    ).trim();
-  }
-  _getEmoji() {
-    return EMOJI_NAMES.map((name) => this._createEmojiMarkup(name)).join(`\n`);
+  _getSortComments() {
+    return this._comments.slice()
+      .sort((a, b) => b.date - a.date);
   }
 
 }
