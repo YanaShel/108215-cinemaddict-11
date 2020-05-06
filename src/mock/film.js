@@ -2,7 +2,6 @@ import {
   getRandomNumber,
   getRandomArrayItem,
   getRandomArrayItems,
-  getRandomDate,
   getRandomIntegerNumber
 } from "../util/util";
 import {generationComments} from "./comments";
@@ -97,6 +96,14 @@ const Rating = {
   MAX: 10,
 };
 
+const getRandomDate = () => {
+  const targetDate = new Date();
+  const day = getRandomIntegerNumber(1, 32);
+  const month = getRandomIntegerNumber(0, 12);
+  const year = getRandomIntegerNumber(1930, 2020);
+  targetDate.setFullYear(year, month, day);
+  return targetDate;
+};
 
 const generateFilm = () => {
   const COMMENTS_COUNT = Math.floor(Math.random() * 20);
@@ -121,7 +128,7 @@ const generateFilm = () => {
   };
 };
 
-export const generateFilms = (count) => {
+export const generateFilms = (count = 18) => {
   return new Array(count)
     .fill(``)
     .map(generateFilm);

@@ -107,7 +107,7 @@ export default class PageController {
 
     switch (sortType) {
       case `date`:
-        sortedFilms = showingFilms.sort((a, b) => b.year - a.year);
+        sortedFilms = showingFilms.sort((a, b) => b.releaseDate - a.releaseDate);
         break;
       case `rating`:
         sortedFilms = showingFilms.sort((a, b) => b.rating - a.rating);

@@ -3,7 +3,8 @@ import FilmDetailsGenre from "./film-details-genre";
 import FilmDetailsButton from "./film-details-button";
 import FilmDetailsComment from "./film-details-comment";
 import FilmDetailsEmoji from "./film-details-emoji";
-import {formatFilmDuration, formatDate} from "../../../util/date";
+import {formatFilmDuration} from "../../../util/date";
+import moment from "moment";
 
 const EMOJI_NAMES = [
   `smile`,
@@ -43,10 +44,21 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    const genresMarkup = this._genres.map((genre) => new FilmDetailsGenre(genre).getTemplate()).join(`\n`);
-    const commentsMarkup = this._getSortComments().map((comment) => new FilmDetailsComment(comment).getTemplate()).join(`\n`);
-    const emojiMarkUp = EMOJI_NAMES.map((name) => new FilmDetailsEmoji(name).getTemplate()).join(`\n`);
-    const buttonsMarkUp = FILM_DETAILS_BUTTONS.map((button) => new FilmDetailsButton(button).getTemplate()).join(`\n`);
+    const genresMarkup = this._genres
+      .map((genre) => new FilmDetailsGenre(genre).getTemplate())
+      .join(`\n`);
+
+    const commentsMarkup = this._getSortComments()
+      .map((comment) => new FilmDetailsComment(comment).getTemplate())
+      .join(`\n`);
+
+    const emojiMarkUp = EMOJI_NAMES
+      .map((name) => new FilmDetailsEmoji(name).getTemplate())
+      .join(`\n`);
+
+    const buttonsMarkUp = FILM_DETAILS_BUTTONS
+      .map((button) => new FilmDetailsButton(button).getTemplate())
+      .join(`\n`);
 
     return (
       `<section class="film-details">
@@ -98,7 +110,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                         </tr>
                         <tr class="film-details__row">
                             <td class="film-details__term">Release Date</td>
-                            <td class="film-details__cell">${formatDate(this._releaseDate)}</td>
+                            <td class="film-details__cell">${this._formatDate(this._releaseDate)}</td>
                         </tr>
                         <tr class="film-details__row">
                             <td class="film-details__term">Runtime</td>
@@ -199,4 +211,7 @@ export default class FilmDetails extends AbstractSmartComponent {
       .sort((a, b) => b.date - a.date);
   }
 
+  _formatDate(date) {
+    return moment(date).format(`DD MMMM YYYY`);
+  }
 }
