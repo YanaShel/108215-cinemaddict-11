@@ -1,4 +1,4 @@
-import Abstract from "../abstract";
+import AbstractComponent from "../abstract-component";
 
 export const SortType = {
   default: `Sort by default`,
@@ -6,11 +6,19 @@ export const SortType = {
   rating: `Sort by rating`,
 };
 
-export default class Sort extends Abstract {
+export default class Sort extends AbstractComponent {
   constructor() {
     super();
 
     this._currenSortType = `default`;
+  }
+
+  getTemplate() {
+    return (
+      `<ul class="sort">
+           ${this._getSortItems()}
+       </ul>`
+    ).trim();
   }
 
   getSortType() {
@@ -39,15 +47,7 @@ export default class Sort extends Abstract {
     });
   }
 
-  getTemplate() {
-    return (
-      `<ul class="sort">
-           ${this._getSortItems()}
-       </ul>`
-    ).trim();
-  }
-
-  _renderSortItem(dataAttribute, name, i) {
+  _createSortItemMarkup(dataAttribute, name, i) {
     return (
       `<li>
             <a href="#" data-sort-type="${dataAttribute}" class="sort__button ${i === 0 ? `sort__button--active` : ``}">
@@ -58,7 +58,7 @@ export default class Sort extends Abstract {
   }
 
   _getSortItems() {
-    return Object.entries(SortType).map(([dataAttribute, name], i) => this._renderSortItem(dataAttribute, name, i)).join(`\n`);
+    return Object.entries(SortType).map(([dataAttribute, name], i) => this._createSortItemMarkup(dataAttribute, name, i)).join(`\n`);
   }
 
   _updateActiveClass(activeButton) {

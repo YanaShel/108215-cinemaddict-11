@@ -1,17 +1,17 @@
 import Sort from "../components/sort/sort";
-import FilmList from "../components/film/film-list";
-import NoFilm from "../components/film/no-films";
-import ShowMoreButton from "../components/film/show-more-button";
-import TopRatedList from "../components/film/extra-lists/top-rated-list";
-import MostCommentedList from "../components/film/extra-lists/most-commented-list";
-import FilmsBlock from "../components/film/films-block";
-import Movie from "./movie";
+import FilmList from "../components/films/main-list/film-list";
+import NoFilm from "../components/films/no-films";
+import ShowMoreButton from "../components/films/main-list/show-more-button";
+import TopRatedList from "../components/films/extra-lists/top-rated-list";
+import MostCommentedList from "../components/films/extra-lists/most-commented-list";
+import FilmsBlock from "../components/films/films-block";
+import MovieController from "./movie-сontroller";
 import {remove, render} from "../util/dom-util";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
-export default class Page {
+export default class PageController {
   constructor(container) {
     this._container = container;
 
@@ -21,7 +21,7 @@ export default class Page {
     this._sort = new Sort();
     this._filmsBlock = new FilmsBlock();
     this._filmsList = new FilmList();
-    this._noFilmsComponent = new NoFilm();
+    this._noFilm = new NoFilm();
     this._showMoreButton = new ShowMoreButton();
 
     this._onDataChange = this._onDataChange.bind(this);
@@ -40,7 +40,7 @@ export default class Page {
     render(filmBlock, this._filmsList);
 
     if (films.length === 0) {
-      render(filmsList, new NoFilm());
+      render(filmsList, this._noFilm);
       return;
     }
 
@@ -49,19 +49,18 @@ export default class Page {
 
     this._renderShowMoreButton();
 
-    // todo где нужно передавать listener для topRatedList и mostCommentedList. В movie?
     this._topRatedList = new TopRatedList(films);
-    this._topRatedList.setClickListener(this._onFilmCardClick);
     render(filmBlock, this._topRatedList);
+    this._renderFilms(this._topRatedList.getElement(), this._getTopRatedFilms(this._films), this._onDataChange, this._onViewChange);
 
-    this._mostCommentedList = new MostCommentedList(films);
-    this._mostCommentedList.setClickListener(this._onFilmCardClick);
+    this._mostCommentedList = new MostCommentedList();
     render(filmBlock, this._mostCommentedList);
+    this._renderFilms(this._mostCommentedList.getElement(), this._getMostCommentedFilms(this._films), this._onDataChange, this._onViewChange);
   }
 
   _renderFilms(filmListElement, films, onDataChange, onViewChange) {
     return films.map((film) => {
-      const movie = new Movie(filmListElement, onDataChange, onViewChange);
+      const movie = new MovieController(filmListElement, onDataChange, onViewChange);
       movie.render(film);
 
       return movie;
@@ -88,6 +87,18 @@ export default class Page {
         remove(this._showMoreButton);
       }
     });
+  }
+
+  _getMostCommentedFilms(films) {
+    return films.slice()
+      .sort((firstFilm, secondFilm) => secondFilm.comments.length - firstFilm.comments.length)
+      .slice(0, 2);
+  }
+
+  _getTopRatedFilms(films) {
+    return films.slice()
+      .sort((firstFilm, secondFilm) => secondFilm.rating - firstFilm.rating)
+      .slice(0, 2);
   }
 
   _getSortedFilms(films, sortType, from, to) {

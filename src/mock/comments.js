@@ -1,4 +1,4 @@
-import {getRandomArrayItem, getRandomDate} from "../util/util";
+import {getRandomArrayItem, getRandomCommentDate} from "../util/util";
 
 const EMOTIONS = [
   `angry`,
@@ -20,10 +20,9 @@ const MESSAGES = [
 ];
 
 const generateComment = () => {
-  const DATE = getRandomDate().toLocaleDateString(`en-GB`, {day: `numeric`, month: `long`, year: `numeric`});
   return {
     emotion: getRandomArrayItem(EMOTIONS),
-    date: DATE,
+    date: getRandomCommentDate(),
     author: getRandomArrayItem(AUTHORS),
     message: getRandomArrayItem(MESSAGES),
   };

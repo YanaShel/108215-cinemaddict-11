@@ -1,4 +1,4 @@
-import Abstract from "../abstract";
+import AbstractComponent from "../abstract-component";
 import {getRandomIntegerNumber} from "../../util/util";
 
 const SITE_MENU_ITEMS = [
@@ -12,7 +12,7 @@ const FILTER_NAMES = [
   `Favorites`,
 ];
 
-export default class Menu extends Abstract {
+export default class Menu extends AbstractComponent {
   getTemplate() {
     return (
       `<nav class="main-navigation">
