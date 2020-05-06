@@ -1,5 +1,5 @@
-import FilmCard from "../components/films/film-card";
-import FilmDetails from "../components/films/film-details";
+import FilmCard from "../components/films/main-list/film-card";
+import FilmDetails from "../components/films/film-details/film-details";
 import {render, replace} from "../util/dom-util";
 import {Key} from "../util/util";
 
@@ -23,9 +23,6 @@ export default class MovieController {
     this._fimCard = new FilmCard(film);
     this._fimCard.setCardClickListener(this._onFilmCardClick);
 
-    // todo данные меняются, и в карточке и в попапе
-    // todo отображение работает с попапа на карточку, с карточки на попап нет
-    // todo перенавесить обработки на btnPopupClose
     this._fimCard.setWatchlistButtonClickListener((evt) => {
       evt.stopPropagation();
       this._onDataChange(this, film, Object.assign({}, film, {

@@ -1,4 +1,6 @@
-import AbstractSmart from "../abstract-smart-component";
+import AbstractSmartComponent from "../../abstract-smart-component";
+import FilmDetailsComment from "./film-details-comment";
+import {formatFilmDuration, formatDate} from "../../../util/date";
 
 const EMOJI_NAMES = [
   `smile`,
@@ -13,19 +15,9 @@ const FILM_DETAILS_BUTTONS = [
   {name: `Add to favorites`, id: `favorite`},
 ];
 
-const FilmInfo = {
-  director: `Director`,
-  writers: `Writers`,
-  actors: `Actors`,
-  releaseDate: `Release Date`,
-  duration: `Runtime`,
-  country: `Country`,
-};
-
-export default class FilmDetails extends AbstractSmart {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
-    this._film = film;
     this._name = film.name;
     this._poster = film.poster;
     this._description = film.description;
@@ -33,6 +25,12 @@ export default class FilmDetails extends AbstractSmart {
     this._genres = film.genres;
     this._rating = film.rating;
     this._age = film.age;
+    this._director = film.director;
+    this._writers = film.writers;
+    this._actors = film.actors;
+    this._releaseDate = film.releaseDate;
+    this._duration = film.duration;
+    this._country = film.country;
 
     this._closePopupListener = null;
     this.setWatchlistPopupBtnClickListener();
@@ -41,7 +39,14 @@ export default class FilmDetails extends AbstractSmart {
     this.setEmojiClickListener();
   }
 
+  _getSortComments() {
+    return this._comments.slice()
+      .sort((a, b) => b.date - a.date);
+  }
+
   getTemplate() {
+    const commentsMarkup = this._getSortComments().map((comment) => new FilmDetailsComment(comment).getTemplate()).join(`\n`);
+
     return (
       `<section class="film-details">
             <form class="film-details__inner" action="" method="get">
@@ -78,8 +83,31 @@ export default class FilmDetails extends AbstractSmart {
                     </div>
 
                     <table class="film-details__table">
-                        ${this._getFilmInfo()}
-                        ${this._createGenresMarkup()}
+                        <tr class="film-details__row">
+                            <td class="film-details__term">Director</td>
+                            <td class="film-details__cell">${this._director}</td>
+                        </tr>
+                        <tr class="film-details__row">
+                            <td class="film-details__term">Writers</td>
+                            <td class="film-details__cell">${this._writers}</td>
+                        </tr>
+                        <tr class="film-details__row">
+                            <td class="film-details__term">Actors</td>
+                            <td class="film-details__cell">${this._actors}</td>
+                        </tr>
+                        <tr class="film-details__row">
+                            <td class="film-details__term">Release Date</td>
+                            <td class="film-details__cell">${formatDate(this._releaseDate)}</td>
+                        </tr>
+                        <tr class="film-details__row">
+                            <td class="film-details__term">Runtime</td>
+                            <td class="film-details__cell">${formatFilmDuration(this._duration)}</td>
+                        </tr>
+                        <tr class="film-details__row">
+                            <td class="film-details__term">Country</td>
+                            <td class="film-details__cell">${this._country}</td>
+                        </tr>
+                            ${this._createGenresMarkup()}
                     </table>
 
                     <p class="film-details__film-description">
@@ -102,7 +130,7 @@ export default class FilmDetails extends AbstractSmart {
                   </h3>
 
                    <ul class="film-details__comments-list">
-                       ${this._getComments()}
+                       ${commentsMarkup}
                    </ul>
 
                   <div class="film-details__new-comment">
@@ -162,22 +190,6 @@ export default class FilmDetails extends AbstractSmart {
       .addEventListener(`change`, listener);
   }
 
-  _createFilmInfoMarkup(value, name) {
-    return (`
-         <tr class="film-details__row">
-            <td class="film-details__term">
-               ${name}
-            </td>
-            <td class="film-details__cell">
-               ${this._film[value]}
-            </td>
-         </tr>
-      `).trim();
-  }
-  _getFilmInfo() {
-    return Object.entries(FilmInfo).map(([value, name]) => this._createFilmInfoMarkup(value, name)).join(`\n`);
-  }
-
   _createGenreMarkup(genre) {
     return (
       `<span class="film-details__genre">
@@ -211,27 +223,6 @@ export default class FilmDetails extends AbstractSmart {
   }
   _getButtonsControl() {
     return FILM_DETAILS_BUTTONS.map(({name, id}) => this._createButtonControlMarkup(name, id)).join(`\n`);
-  }
-
-  _createCommentMarkup(emotion, author, date, message) {
-    return (
-      `<li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-                <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
-            </span>
-            <div>
-                <p class="film-details__comment-text">${message}</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">${author}</span>
-                  <span class="film-details__comment-day">${date}</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-            </div>
-         </li>`
-    ).trim();
-  }
-  _getComments() {
-    return this._comments.map(({emotion, author, date, message}) => this._createCommentMarkup(emotion, author, date, message)).join(`\n`);
   }
 
   _createEmojiMarkup(name) {

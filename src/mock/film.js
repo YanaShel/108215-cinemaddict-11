@@ -1,4 +1,10 @@
-import {getRandomNumber, getRandomArrayItem, getRandomArrayItems, getRandomDate} from "../util/util";
+import {
+  getRandomNumber,
+  getRandomArrayItem,
+  getRandomArrayItems,
+  getRandomDate,
+  getRandomIntegerNumber
+} from "../util/util";
 import {generationComments} from "./comments";
 
 const FILM_NAMES = [
@@ -71,15 +77,10 @@ const DESCRIPTIONS = [
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
 
-const DURATIONS = [
-  `1h 55m`,
-  `54m`,
-  `1h 59m`,
-  `1h 21m`,
-  `16m`,
-  `1h 18m`,
-  `1h 32m`
-];
+const Duration = {
+  MIN: 20,
+  MAX: 150,
+};
 
 const GENRES = [
   `Musical`,
@@ -99,7 +100,6 @@ const Rating = {
 
 const generateFilm = () => {
   const COMMENTS_COUNT = Math.floor(Math.random() * 20);
-  const fullDate = getRandomDate();
   return {
     name: getRandomArrayItem(FILM_NAMES),
     director: getRandomArrayItem(DIRECTORS),
@@ -109,12 +109,11 @@ const generateFilm = () => {
     actors: getRandomArrayItems(ACTORS),
     country: getRandomArrayItem(COUNTRIES),
     comments: generationComments(COMMENTS_COUNT),
-    year: fullDate.getFullYear(),
-    duration: getRandomArrayItem(DURATIONS),
+    duration: getRandomIntegerNumber(Duration.MIN, Duration.MAX),
     genres: getRandomArrayItems(GENRES),
     rating: getRandomNumber(Rating.MIN, Rating.MAX),
     age: getRandomArrayItem(AGE_RATINGS),
-    releaseDate: fullDate.toLocaleDateString(`en-GB`, {day: `numeric`, month: `long`, year: `numeric`}),
+    releaseDate: getRandomDate(),
     isWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,

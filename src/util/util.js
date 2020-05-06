@@ -33,7 +33,16 @@ export const getRandomDate = () => {
   const targetDate = new Date();
   const day = getRandomIntegerNumber(1, 32);
   const month = getRandomIntegerNumber(0, 12);
-  const year = getRandomIntegerNumber(2000, 2020);
+  const year = getRandomIntegerNumber(1930, 2020);
+  targetDate.setFullYear(year, month, day);
+  return targetDate;
+};
+
+export const getRandomCommentDate = () => {
+  const targetDate = new Date();
+  const day = getRandomIntegerNumber(1, new Date().getDate() + 1);
+  const month = new Date().getMonth();
+  const year = new Date().getFullYear();
   targetDate.setFullYear(year, month, day);
   return targetDate;
 };

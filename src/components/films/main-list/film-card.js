@@ -1,4 +1,5 @@
-import AbstractComponent from "../abstract-component";
+import AbstractComponent from "../../abstract-component";
+import {formatFilmDuration, formatYear} from "../../../util/date";
 
 const FILM_CARD_BUTTONS = [
   {name: `Add to watchlist`, className: `add-to-watchlist`},
@@ -14,7 +15,7 @@ export default class FilmCard extends AbstractComponent {
     this._poster = film.poster;
     this._description = film.description;
     this._comments = film.comments;
-    this._year = film.year;
+    this._releaseDate = film.releaseDate;
     this._duration = film.duration;
     this._genres = film.genres;
     this._rating = film.rating;
@@ -31,8 +32,8 @@ export default class FilmCard extends AbstractComponent {
             <h3 class="film-card__title">${this._name}</h3>
             <p class="film-card__rating">${this._rating}</p>
             <p class="film-card__info">
-                <span class="film-card__year">${this._year}</span>
-                <span class="film-card__duration">${this._duration}</span>
+                <span class="film-card__year">${formatYear(this._releaseDate)}</span>
+                <span class="film-card__duration">${formatFilmDuration(this._duration)}</span>
                 <span class="film-card__genre">${this._genres[0]}</span>
             </p>
             <img src="${this._poster}" alt="" class="film-card__poster">
