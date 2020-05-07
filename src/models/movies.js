@@ -1,20 +1,20 @@
 export default class Movies {
   constructor() {
-    this._movies = [];
+    this._films = [];
 
     this._dataChangeListener = [];
   }
 
-  getMovies() {
-    return this._movies;
+  getFilms() {
+    return this._films;
   }
 
-  setMovies(films) {
+  setFilms(films) {
     this._films = Array.from(films);
     this._callListeners(this._dataChangeListener);
   }
 
-  updateMovies(id, film) {
+  updateFilms(id, film) {
     const index = this._films.findIndex((item) => item.id === id);
 
     if (index === -1) {
@@ -26,5 +26,9 @@ export default class Movies {
     this._callListeners(this._dataChangeListener);
 
     return true;
+  }
+
+  _callListeners(listeners) {
+    listeners.forEach((listener) => listener());
   }
 }
