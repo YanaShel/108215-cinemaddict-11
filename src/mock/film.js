@@ -108,6 +108,7 @@ const getRandomDate = () => {
 const generateFilm = () => {
   const COMMENTS_COUNT = Math.floor(Math.random() * 20);
   return {
+    id: String(new Date() + Math.random()),
     name: getRandomArrayItem(FILM_NAMES),
     director: getRandomArrayItem(DIRECTORS),
     poster: getRandomArrayItem(POSTERS),
