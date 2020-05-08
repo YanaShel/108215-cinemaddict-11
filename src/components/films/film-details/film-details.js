@@ -1,17 +1,9 @@
 import AbstractSmartComponent from "../../abstract-smart-component";
 import FilmDetailsGenre from "./film-details-genre";
 import FilmDetailsButton from "./film-details-button";
-import FilmDetailsComment from "./film-details-comment";
-import FilmDetailsEmoji from "./film-details-emoji";
+import FilmDetailsComments from "./film-details-comments";
 import {formatFilmDuration} from "../../../util/date";
 import moment from "moment";
-
-const EMOJI_NAMES = [
-  `smile`,
-  `sleeping`,
-  `puke`,
-  `angry`
-];
 
 const FILM_DETAILS_BUTTONS = [
   {name: `Add to watchlist`, id: `watchlist`},
@@ -48,17 +40,11 @@ export default class FilmDetails extends AbstractSmartComponent {
       .map((genre) => new FilmDetailsGenre(genre).getTemplate())
       .join(`\n`);
 
-    const commentsMarkup = this._getSortComments()
-      .map((comment) => new FilmDetailsComment(comment).getTemplate())
-      .join(`\n`);
-
-    const emojiMarkUp = EMOJI_NAMES
-      .map((name) => new FilmDetailsEmoji(name).getTemplate())
-      .join(`\n`);
-
     const buttonsMarkUp = FILM_DETAILS_BUTTONS
       .map((button) => new FilmDetailsButton(button).getTemplate())
       .join(`\n`);
+
+    const commentsMarkup = new FilmDetailsComments(this._comments).getTemplate();
 
     return (
       `<section class="film-details">
@@ -136,33 +122,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                     ${buttonsMarkUp}
                 </section>
               </div>
-
-              <div class="form-details__bottom-container">
-                <section class="film-details__comments-wrap">
-                  <h3 class="film-details__comments-title">Comments
-                    <span class="film-details__comments-count">
-                        ${this._comments.length}
-                    </span>
-                  </h3>
-
-                   <ul class="film-details__comments-list">
-                       ${commentsMarkup}
-                   </ul>
-
-                  <div class="film-details__new-comment">
-                    <div for="add-emoji" class="film-details__add-emoji-label"></div>
-
-                    <label class="film-details__comment-label">
-                      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here"
-                                name="comment"></textarea>
-                    </label>
-
-                    <div class="film-details__emoji-list">
-                        ${emojiMarkUp}
-                    </div>
-                  </div>
-                </section>
-              </div>
+              ${commentsMarkup}
             </form>
          </section>`
     );
@@ -204,11 +164,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   setEmojiClickListener(listener) {
     this.getElement().querySelector(`.film-details__emoji-list`)
       .addEventListener(`change`, listener);
-  }
-
-  _getSortComments() {
-    return this._comments.slice()
-      .sort((a, b) => b.date - a.date);
   }
 
   _formatDate(date) {

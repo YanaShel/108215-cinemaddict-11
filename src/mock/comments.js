@@ -28,8 +28,9 @@ const getRandomCommentDate = () => {
   return targetDate;
 };
 
-const generateComment = () => {
+const generateComment = (id) => {
   return {
+    filmId: id,
     emotion: getRandomArrayItem(EMOTIONS),
     date: getRandomCommentDate(),
     author: getRandomArrayItem(AUTHORS),
@@ -37,10 +38,10 @@ const generateComment = () => {
   };
 };
 
-export const generationComments = (count) => {
+export const generationComments = (filmId, count) => {
   const comments = [];
   for (let i = 0; i < count; i++) {
-    comments.push(generateComment());
+    comments.push(generateComment(filmId));
   }
   return comments;
 };

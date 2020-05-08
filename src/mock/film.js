@@ -107,7 +107,7 @@ const getRandomDate = () => {
 
 const generateFilm = () => {
   const COMMENTS_COUNT = Math.floor(Math.random() * 20);
-  return {
+  const film = {
     id: String(new Date() + Math.random()),
     name: getRandomArrayItem(FILM_NAMES),
     director: getRandomArrayItem(DIRECTORS),
@@ -116,7 +116,6 @@ const generateFilm = () => {
     writers: getRandomArrayItems(WRITERS),
     actors: getRandomArrayItems(ACTORS),
     country: getRandomArrayItem(COUNTRIES),
-    comments: generationComments(COMMENTS_COUNT),
     duration: getRandomIntegerNumber(Duration.MIN, Duration.MAX),
     genres: getRandomArrayItems(GENRES),
     rating: getRandomNumber(Rating.MIN, Rating.MAX),
@@ -127,6 +126,8 @@ const generateFilm = () => {
     isFavorite: Math.random() > 0.5,
     emoji: null,
   };
+  film.comments = generationComments(film.id, COMMENTS_COUNT);
+  return film;
 };
 
 export const generateFilms = (count = 18) => {
