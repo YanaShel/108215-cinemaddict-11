@@ -1,6 +1,6 @@
 import FilmCard from "../components/films/main-list/film-card";
 import FilmDetails from "../components/films/film-details/film-details";
-import {render, replace} from "../util/dom-util";
+import {render, replace, remove} from "../util/dom-util";
 import {Key} from "../util/util";
 
 export default class MovieController {
@@ -99,5 +99,10 @@ export default class MovieController {
 
   _setDefaultView() {
     this._closeFilmDetailsPopup();
+  }
+
+  destroy() {
+    remove(this._fimCard);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 }

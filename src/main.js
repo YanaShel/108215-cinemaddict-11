@@ -1,6 +1,6 @@
 import UserProfile from "./components/profile/user-profile";
-import Menu from "./components/menu/menu";
-import PageController from "./controllers/page-сontroller";
+import FilterController from "./controllers/filter-controller";
+import PageController from "./controllers/page-controller";
 import MoviesModel from "./models/movies";
 import {generateFilms} from "./mock/film";
 import {render} from "./util/dom-util";
@@ -20,9 +20,11 @@ const moviesModel = new MoviesModel();
 moviesModel.setFilms(films);
 
 const userProfile = new UserProfile(getRandomArrayItem(USER_RATING_NAMES));
-const menu = new Menu();
+const filterController = new FilterController(mainElement, moviesModel);
 const pageController = new PageController(mainElement, moviesModel);
 
 render(headerElement, userProfile);
-render(mainElement, menu);
+filterController.render();
+// render(mainElement, filters);
 pageController.render(films);
+

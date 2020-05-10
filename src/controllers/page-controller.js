@@ -5,7 +5,7 @@ import ShowMoreButton from "../components/films/main-list/show-more-button";
 import TopRatedList from "../components/films/extra-lists/top-rated-list";
 import MostCommentedList from "../components/films/extra-lists/most-commented-list";
 import FilmsBlock from "../components/films/films-block";
-import MovieController from "./movie-сontroller";
+import MovieController from "./movie-controller";
 import {remove, render} from "../util/dom-util";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
@@ -27,7 +27,11 @@ export default class PageController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+
     this._sort.setSortTypeChangeListener(this._onSortTypeChange);
+    this._filmsModel.setFilterChangeListener(this._onFilterChange);
   }
 
   render() {
@@ -74,23 +78,14 @@ export default class PageController {
 
   _renderShowMoreButton() {
     remove(this._showMoreButton);
+
     if (this._showingFilmsCount >= this._filmsModel.getFilms().length) {
       return;
     }
 
     render(this._filmsList.getElement(), this._showMoreButton);
 
-    this._showMoreButton.setClickListener(() => {
-      const prevFilmsCount = this._showingFilmsCount;
-      const films = this._filmsModel.getFilms();
-      this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
-
-      const sortedFilms = this._getSortedFilms(films, this._sort.getSortType(), prevFilmsCount, this._showingFilmsCount);
-      const newFilms = this.renderFilms(this._filmsList.getElement(), sortedFilms, this._onDataChange, this._onViewChange);
-
-      this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
-
-    });
+    this._showMoreButton.setClickListener(this._onShowMoreButtonClick);
   }
 
   _getMostCommentedFilms(films) {
@@ -125,7 +120,7 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const isSuccess = this._filmsModel.updateFilms(oldData.id, newData)
+    const isSuccess = this._filmsModel.updateFilms(oldData.id, newData);
     if (isSuccess) {
       movieController.render(newData);
     }
@@ -133,15 +128,41 @@ export default class PageController {
 
   _onSortTypeChange(sortType) {
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
-
     const sortedFilms = this._getSortedFilms(this._filmsModel.getFilms(), sortType, 0, this._showingFilmsCount);
-
-    this._filmsList.getElement().querySelector(`.films-list__container`).innerHTML = ``;
-
-    const newFilms = this._renderFilms(this._filmsList.getElement(), sortedFilms, this._onDataChange, this._onViewChange);
-    this._showedFilmControllers = newFilms;
-
+    // this._filmsList.getElement().querySelector(`.films-list__container`).innerHTML = ``;
+    // this._showedFilmControllers = this._renderFilms(this._filmsList.getElement(), sortedFilms, this._onDataChange, this._onViewChange);
+    this._removeFilms();
+    this._renderFilms(sortedFilms);
     this._renderShowMoreButton();
+  }
+
+  _onShowMoreButtonClick() {
+    const prevFilmsCount = this._showingFilmsCount;
+    const films = this._filmsModel.getFilms();
+
+    this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
+
+    const sortedFilms = this._getSortedFilms(films, this._sort.getSortType(), prevFilmsCount, this._showingFilmsCount);
+    this._renderFilms(sortedFilms);
+
+    if (this._showingFilmsCount >= films.length) {
+      remove(this._showMoreButton);
+    }
+  }
+
+  _onFilterChange() {
+    this._updateFilms(SHOWING_FILMS_COUNT_ON_START);
+  }
+
+  _updateFilms(count) {
+    this._removeFilms();
+    this._renderFilms(this._filmsModel.getFilms().slice(0, count));
+    this._renderShowMoreButton();
+  }
+
+  _removeFilms() {
+    this._showedFilmControllers.forEach((filmController) => filmController.destroy());
+    this._showedFilmControllers = [];
   }
 
   _onViewChange() {
