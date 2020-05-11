@@ -39,6 +39,10 @@ export default class Movies {
     this._filterChangeListeners.push(listener);
   }
 
+  setDataChangeListener(listener) {
+    this._dataChangeListener.push(listener);
+  }
+
   _callListeners(listeners) {
     listeners.forEach((listener) => listener());
   }

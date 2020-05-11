@@ -15,7 +15,7 @@ export default class FilterController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
 
-    // this._moviesModel.setDataChangeHandler(this._onDataChange);
+    this._moviesModel.setDataChangeListener(this._onDataChange);
   }
 
   render() {
@@ -48,5 +48,4 @@ export default class FilterController {
   _onDataChange() {
     this.render();
   }
-
 }
