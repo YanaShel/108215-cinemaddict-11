@@ -1,11 +1,12 @@
 import UserProfile from "./components/profile/user-profile";
-import Menu from "./components/menu/menu";
-import PageController from "./controllers/page-сontroller";
-import {generateFilms} from "./mock/film";
+import FilterController from "./controllers/filter-controller";
+import PageController from "./controllers/page-controller";
+import MoviesModel from "./models/movies";
+import {generateFilmIds, generateFilms} from "./mock/film";
 import {render} from "./util/dom-util";
 import {getRandomArrayItem} from "./util/util";
-
-const FILM_COUNT = 18;
+import {generateAllComments} from "./mock/film";
+import Comments from "./models/comments";
 
 const USER_RATING_NAMES = [
   `Novice`,
@@ -16,11 +17,21 @@ const USER_RATING_NAMES = [
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
-const films = generateFilms(FILM_COUNT);
+const filmIdList = generateFilmIds();
+
+const comments = generateAllComments(filmIdList);
+const commentsModel = new Comments();
+commentsModel.setComments(comments);
+
+const films = generateFilms(filmIdList, comments);
+const moviesModel = new MoviesModel();
+moviesModel.setFilms(films);
+
 const userProfile = new UserProfile(getRandomArrayItem(USER_RATING_NAMES));
-const menu = new Menu();
-const pageController = new PageController(mainElement);
+const filterController = new FilterController(mainElement, moviesModel);
+const pageController = new PageController(mainElement, moviesModel);
 
 render(headerElement, userProfile);
-render(mainElement, menu);
+filterController.render();
 pageController.render(films);
+

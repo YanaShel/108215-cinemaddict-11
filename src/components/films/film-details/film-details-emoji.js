@@ -1,6 +1,6 @@
-import AbstractSmartComponent from "../../abstract-smart-component";
+import AbstractComponent from "../../abstract-smart-component";
 
-export default class FilmDetailsEmoji extends AbstractSmartComponent {
+export default class FilmDetailsEmoji extends AbstractComponent {
   constructor(emoji) {
     super();
     this._emoji = emoji;

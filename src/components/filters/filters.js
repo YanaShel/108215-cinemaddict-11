@@ -1,38 +1,43 @@
 import AbstractComponent from "../abstract-component";
-import {getRandomIntegerNumber} from "../../util/util";
 
 const SITE_MENU_ITEMS = [
   {name: `All movies`, className: `item`, href: `all`, isActive: true},
   {name: `Stats`, className: `additional`, href: `stats`},
 ];
 
-const FILTER_NAMES = [
-  `Watchlist`,
-  `History`,
-  `Favorites`,
-];
+export default class Filters extends AbstractComponent {
+  constructor(filters) {
+    super();
+    this._filters = filters;
+  }
 
-export default class Menu extends AbstractComponent {
   getTemplate() {
     return (
       `<nav class="main-navigation">
             <div class="main-navigation__items">
-                ${this._getMenuItem(SITE_MENU_ITEMS[0])}
-                ${this._getMenuFilers()}
+                ${this._getMenuFilers(this._filters)}
             </div>
           ${this._getMenuItem(SITE_MENU_ITEMS[1])}
        </nav>`
     ).trim();
   }
 
-  _renderMenuFiler(name) {
+  setFilterChangeListener(listener) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      const filterName = evt.target.id;
+      listener(filterName);
+    });
+  }
+
+  _renderMenuFiler({name, count, isChecked}) {
     return (
       `<a href="#${name}"
-          class="main-navigation__item">
+          id="${name}"
+          class="main-navigation__item ${isChecked ? `main-navigation__item--active` : ``}">
              ${name}
-            <span class="main-navigation__item-count">
-                ${getRandomIntegerNumber(1, 10)}
-            </span>
+             ${name === `All movies` ? `` : `<span class="main-navigation__item-count">
+                ${count}
+            </span>`}
        </a>`
     ).trim();
   }
@@ -46,7 +51,7 @@ export default class Menu extends AbstractComponent {
     ).trim();
   }
 
-  _getMenuFilers() {
-    return FILTER_NAMES.map((name) => this._renderMenuFiler(name)).join(`\n`);
+  _getMenuFilers(filters) {
+    return filters.map((name) => this._renderMenuFiler(name)).join(`\n`);
   }
 }

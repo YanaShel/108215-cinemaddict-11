@@ -1,10 +1,10 @@
-import {getRandomArrayItem, getRandomCommentDate} from "../util/util";
+import {getRandomArrayItem, getRandomIntegerNumber} from "../util/util";
 
 const EMOTIONS = [
-  `angry`,
-  `puke`,
-  `sleeping`,
-  `smile`,
+  `./images/emoji/angry.png`,
+  `./images/emoji/puke.png`,
+  `./images/emoji/sleeping.png`,
+  `./images/emoji/smile.png`,
 ];
 
 const AUTHORS = [
@@ -19,8 +19,19 @@ const MESSAGES = [
   `Almost two hours? Seriously?`,
 ];
 
-const generateComment = () => {
+const getRandomCommentDate = () => {
+  const targetDate = new Date();
+  const day = getRandomIntegerNumber(1, new Date().getDate() + 1);
+  const month = new Date().getMonth();
+  const year = new Date().getFullYear();
+  targetDate.setFullYear(year, month, day);
+  return targetDate;
+};
+
+const generateComment = (id) => {
   return {
+    id: String(new Date() + Math.random()),
+    filmId: id,
     emotion: getRandomArrayItem(EMOTIONS),
     date: getRandomCommentDate(),
     author: getRandomArrayItem(AUTHORS),
@@ -28,10 +39,10 @@ const generateComment = () => {
   };
 };
 
-export const generationComments = (count) => {
+export const generateComments = (filmId, count) => {
   const comments = [];
   for (let i = 0; i < count; i++) {
-    comments.push(generateComment());
+    comments.push(generateComment(filmId));
   }
   return comments;
 };

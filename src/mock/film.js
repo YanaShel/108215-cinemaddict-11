@@ -1,11 +1,5 @@
-import {
-  getRandomNumber,
-  getRandomArrayItem,
-  getRandomArrayItems,
-  getRandomDate,
-  getRandomIntegerNumber
-} from "../util/util";
-import {generationComments} from "./comments";
+import {getRandomArrayItem, getRandomArrayItems, getRandomIntegerNumber, getRandomNumber} from "../util/util";
+import {generateComments} from "./comments";
 
 const FILM_NAMES = [
   `The Dance of Life`,
@@ -97,10 +91,22 @@ const Rating = {
   MAX: 10,
 };
 
+const getRandomDate = () => {
+  const targetDate = new Date();
+  const day = getRandomIntegerNumber(1, 32);
+  const month = getRandomIntegerNumber(0, 12);
+  const year = getRandomIntegerNumber(1930, 2020);
+  targetDate.setFullYear(year, month, day);
+  return targetDate;
+};
 
-const generateFilm = () => {
-  const COMMENTS_COUNT = Math.floor(Math.random() * 20);
+const generateFilmId = () => {
+  return String(new Date() + Math.random());
+};
+
+const generateFilm = (filmId, filmComments) => {
   return {
+    id: filmId,
     name: getRandomArrayItem(FILM_NAMES),
     director: getRandomArrayItem(DIRECTORS),
     poster: getRandomArrayItem(POSTERS),
@@ -108,12 +114,12 @@ const generateFilm = () => {
     writers: getRandomArrayItems(WRITERS),
     actors: getRandomArrayItems(ACTORS),
     country: getRandomArrayItem(COUNTRIES),
-    comments: generationComments(COMMENTS_COUNT),
     duration: getRandomIntegerNumber(Duration.MIN, Duration.MAX),
     genres: getRandomArrayItems(GENRES),
     rating: getRandomNumber(Rating.MIN, Rating.MAX),
     age: getRandomArrayItem(AGE_RATINGS),
     releaseDate: getRandomDate(),
+    comments: filmComments,
     isWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
@@ -121,8 +127,25 @@ const generateFilm = () => {
   };
 };
 
-export const generateFilms = (count) => {
+export const generateFilmIds = (count = 18) => {
   return new Array(count)
     .fill(``)
-    .map(generateFilm);
+    .map(generateFilmId);
 };
+
+export const generateFilms = (filmIds, comments) => {
+  const films = [];
+  filmIds.forEach((filmId) => {
+    const filmComments = comments.filter((comment) => comment.filmId === filmId);
+    films.push(generateFilm(filmId, filmComments));
+  });
+  return films;
+};
+
+export const generateAllComments = (filmIds) => {
+  const comments = [];
+  filmIds.forEach((filmId) => comments.push(generateComments(filmId, Math.floor(Math.random() * 20))));
+  return comments.flat();
+};
+
+

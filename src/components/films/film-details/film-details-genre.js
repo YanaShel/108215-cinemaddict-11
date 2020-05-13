@@ -1,6 +1,6 @@
-import AbstractSmartComponent from "../../abstract-smart-component";
+import AbstractComponent from "../../abstract-smart-component";
 
-export default class FilmDetailsGenre extends AbstractSmartComponent {
+export default class FilmDetailsGenre extends AbstractComponent {
   constructor(genre) {
     super();
     this._genre = genre;
