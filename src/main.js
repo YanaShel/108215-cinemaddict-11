@@ -5,7 +5,7 @@ import MoviesModel from "./models/movies";
 import {generateFilmIds, generateFilms} from "./mock/film";
 import {render} from "./util/dom-util";
 import {getRandomArrayItem} from "./util/util";
-import {generateComments} from "./mock/film";
+import {generateAllComments} from "./mock/film";
 import Comments from "./models/comments";
 
 const USER_RATING_NAMES = [
@@ -19,7 +19,7 @@ const mainElement = document.querySelector(`.main`);
 
 const filmIdList = generateFilmIds();
 
-const comments = generateComments(filmIdList);
+const comments = generateAllComments(filmIdList);
 const commentsModel = new Comments();
 commentsModel.setComments(comments);
 

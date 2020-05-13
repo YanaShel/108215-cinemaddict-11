@@ -39,7 +39,7 @@ const generateComment = (id) => {
   };
 };
 
-export const generationComments = (filmId, count) => {
+export const generateComments = (filmId, count) => {
   const comments = [];
   for (let i = 0; i < count; i++) {
     comments.push(generateComment(filmId));

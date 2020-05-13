@@ -92,6 +92,9 @@ export default class MovieController {
         this._onDataChange(this, film, Object.assign(film, {comments: newComments}));
       }
     });
+    this._filmDetails.setCloseButtonClickListener(() => {
+      this._closeFilmDetailsPopup();
+    });
 
     if (oldFilmCard && oldFilmDetails) {
       replace(this._fimCard, oldFilmCard);
@@ -99,6 +102,23 @@ export default class MovieController {
     } else {
       render(this._container.querySelector(`.films-list__container`), this._fimCard);
     }
+  }
+
+  setDefaultView() {
+    if (this._state !== State.DEFAULT) {
+      this._closeFilmDetailsPopup();
+    }
+  }
+
+  destroy() {
+    remove(this._fimCard);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _closeFilmDetailsPopup() {
+    this._filmDetails.resetAddCommentForm();
+    this._filmDetails.getElement().remove();
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _onEscKeyDown(evt) {
@@ -110,32 +130,15 @@ export default class MovieController {
     }
   }
 
-  _closeFilmDetailsPopup() {
-    this._filmDetails.resetAddCommentForm();
-    this._filmDetails.getElement().remove();
-  }
-
   _onFilmCardClick() {
     this._onViewChange();
     render(this._bodyElement, this._filmDetails);
     this._state = State.DETAILS;
-    const buttonCloseFilmDetails = this._filmDetails.getElement().querySelector(`.film-details__close-btn`);
 
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._filmDetails.setCloseButtonClickListener(() => {
-      this._closeFilmDetailsPopup(this._filmDetails.getElement(), buttonCloseFilmDetails);
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
+      this._closeFilmDetailsPopup();
     });
   }
 
-  _setDefaultView() {
-    if (this._state !== State.DEFAULT) {
-      this._closeFilmDetailsPopup();
-    }
-  }
-
-  destroy() {
-    remove(this._fimCard);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
-  }
 }

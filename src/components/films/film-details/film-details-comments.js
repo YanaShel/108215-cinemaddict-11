@@ -1,6 +1,7 @@
 import AbstractComponent from "../../abstract-component";
 import FilmDetailsEmoji from "./film-details-emoji";
 import moment from "moment";
+import {encode} from "he";
 
 const EMOJI_NAMES = [
   `smile`,
@@ -13,24 +14,6 @@ export default class FilmDetailsComments extends AbstractComponent {
   constructor(comments) {
     super();
     this._comments = comments;
-  }
-
-  _createCommentMarkup({id, emotion, author, date, message}) {
-    return (
-      `<li class="film-details__comment" id="${id}">
-            <span class="film-details__comment-emoji">
-                <img src="${emotion}" width="55" height="55" alt="emoji-${emotion}">
-            </span>
-            <div>
-                <p class="film-details__comment-text">${message}</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">${author}</span>
-                  <span class="film-details__comment-day">${this._formatCommentsDate(date)}</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-            </div>
-         </li>`
-    ).trim();
   }
 
   getTemplate() {
@@ -69,6 +52,24 @@ export default class FilmDetailsComments extends AbstractComponent {
         </section>
       </div>`
     );
+  }
+
+  _createCommentMarkup({id, emotion, author, date, message}) {
+    return (
+      `<li class="film-details__comment" id="${id}">
+            <span class="film-details__comment-emoji">
+                <img src="${emotion}" width="55" height="55" alt="emoji-${emotion}">
+            </span>
+            <div>
+                <p class="film-details__comment-text">${encode(message)}</p>
+                <p class="film-details__comment-info">
+                  <span class="film-details__comment-author">${author}</span>
+                  <span class="film-details__comment-day">${this._formatCommentsDate(date)}</span>
+                  <button class="film-details__comment-delete">Delete</button>
+                </p>
+            </div>
+         </li>`
+    ).trim();
   }
 
   _getSortComments() {

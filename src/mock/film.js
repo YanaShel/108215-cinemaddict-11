@@ -1,5 +1,5 @@
 import {getRandomArrayItem, getRandomArrayItems, getRandomIntegerNumber, getRandomNumber} from "../util/util";
-import {generationComments} from "./comments";
+import {generateComments} from "./comments";
 
 const FILM_NAMES = [
   `The Dance of Life`,
@@ -142,9 +142,9 @@ export const generateFilms = (filmIds, comments) => {
   return films;
 };
 
-export const generateComments = (filmIds) => {
+export const generateAllComments = (filmIds) => {
   const comments = [];
-  filmIds.forEach((filmId) => comments.push(generationComments(filmId, Math.floor(Math.random() * 20))));
+  filmIds.forEach((filmId) => comments.push(generateComments(filmId, Math.floor(Math.random() * 20))));
   return comments.flat();
 };
 

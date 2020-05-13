@@ -168,6 +168,6 @@ export default class PageController {
   }
 
   _onViewChange() {
-    this._showedFilmControllers.forEach((it) => it._setDefaultView());
+    this._showedFilmControllers.forEach((it) => it.setDefaultView());
   }
 }
