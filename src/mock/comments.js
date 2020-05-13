@@ -1,10 +1,10 @@
 import {getRandomArrayItem, getRandomIntegerNumber} from "../util/util";
 
 const EMOTIONS = [
-  `angry`,
-  `puke`,
-  `sleeping`,
-  `smile`,
+  `./images/emoji/angry.png`,
+  `./images/emoji/puke.png`,
+  `./images/emoji/sleeping.png`,
+  `./images/emoji/smile.png`,
 ];
 
 const AUTHORS = [
@@ -30,6 +30,7 @@ const getRandomCommentDate = () => {
 
 const generateComment = (id) => {
   return {
+    id: String(new Date() + Math.random()),
     filmId: id,
     emotion: getRandomArrayItem(EMOTIONS),
     date: getRandomCommentDate(),

@@ -28,6 +28,8 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._duration = film.duration;
     this._country = film.country;
 
+    this._deleteButtonListener = null;
+    this._setCommentListener = null;
     this._closePopupListener = null;
     this.setWatchlistPopupBtnClickListener();
     this.setWatchedPopupBtnClickListener();
@@ -128,16 +130,64 @@ export default class FilmDetails extends AbstractSmartComponent {
     );
   }
 
+  rerender() {
+    super.rerender();
+  }
+
   recoveryListeners() {
     this.setCloseButtonClickListener(this._closePopupListener);
     this.setWatchlistPopupBtnClickListener();
     this.setWatchedPopupBtnClickListener();
     this.setFavoritePopupBtnClickListener();
     this.setEmojiClickListener();
+    this.setDeleteButtonClickListener(this._deleteButtonListener);
+    this.setAddCommentListener(this._setCommentListener);
   }
 
-  rerender() {
-    super.rerender();
+  setDeleteButtonClickListener(listener) {
+    const deleteCommentButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    if (deleteCommentButtons) {
+      Array.from(deleteCommentButtons)
+        .forEach((btn) => {
+          btn.addEventListener(`click`, listener);
+        });
+    }
+
+    this._deleteButtonListener = listener;
+  }
+
+  collectComment() {
+    const textComment = this._element.querySelector(`.film-details__comment-input`);
+    const emojiElement = this._element.querySelector(`.film-details__add-emoji-label`).firstElementChild;
+
+    const message = textComment.value;
+    const emotion = emojiElement ? emojiElement.attributes[0].value : ``;
+
+    if (!emotion || !message) {
+      return null;
+    }
+
+    const date = new Date();
+    const id = String(new Date() + Math.random());
+    const author = `Неопознаный энот`;
+
+    return {message, emotion, date, id, author};
+  }
+
+  resetAddCommentForm() {
+    const textComment = this._element.querySelector(`.film-details__comment-input`);
+    textComment.value = ``;
+    const emojiElement = this._element.querySelector(`.film-details__add-emoji-label`).firstElementChild;
+
+    if (emojiElement) {
+      emojiElement.remove();
+    }
+  }
+
+  setAddCommentListener(listener) {
+    const textComment = this.getElement().querySelector(`.film-details__comment-input`);
+    textComment.addEventListener(`keydown`, listener);
+    this._setCommentListener = listener;
   }
 
   setCloseButtonClickListener(listener) {

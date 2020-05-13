@@ -15,11 +15,11 @@ export default class FilmDetailsComments extends AbstractComponent {
     this._comments = comments;
   }
 
-  _createCommentMarkup({emotion, author, date, message}) {
+  _createCommentMarkup({id, emotion, author, date, message}) {
     return (
-      `<li class="film-details__comment">
+      `<li class="film-details__comment" id="${id}">
             <span class="film-details__comment-emoji">
-                <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
+                <img src="${emotion}" width="55" height="55" alt="emoji-${emotion}">
             </span>
             <div>
                 <p class="film-details__comment-text">${message}</p>

@@ -5,7 +5,7 @@ import ShowMoreButton from "../components/films/main-list/show-more-button";
 import TopRatedList from "../components/films/extra-lists/top-rated-list";
 import MostCommentedList from "../components/films/extra-lists/most-commented-list";
 import FilmsBlock from "../components/films/films-block";
-import MovieController from "./movie-controller";
+import MovieController, {State as FilmState} from "./movie-controller";
 import {remove, render} from "../util/dom-util";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
@@ -64,7 +64,7 @@ export default class PageController {
   renderFilms(filmListElement, films, onDataChange, onViewChange) {
     return films.map((film) => {
       const movie = new MovieController(filmListElement, onDataChange, onViewChange);
-      movie.render(film);
+      movie.render(film, FilmState.DEFAULT);
 
       return movie;
     });
@@ -131,6 +131,7 @@ export default class PageController {
     const sortedFilms = this._getSortedFilms(this._filmsModel.getFilms(), 0, this._showingFilmsCount, sortType);
     this._removeFilms();
     this._renderFilms(sortedFilms);
+
     this._renderShowMoreButton();
   }
 

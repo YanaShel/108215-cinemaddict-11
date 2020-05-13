@@ -1,9 +1,4 @@
-import {
-  getRandomNumber,
-  getRandomArrayItem,
-  getRandomArrayItems,
-  getRandomIntegerNumber
-} from "../util/util";
+import {getRandomArrayItem, getRandomArrayItems, getRandomIntegerNumber, getRandomNumber} from "../util/util";
 import {generationComments} from "./comments";
 
 const FILM_NAMES = [
@@ -105,10 +100,13 @@ const getRandomDate = () => {
   return targetDate;
 };
 
-const generateFilm = () => {
-  const COMMENTS_COUNT = Math.floor(Math.random() * 20);
-  const film = {
-    id: String(new Date() + Math.random()),
+const generateFilmId = () => {
+  return String(new Date() + Math.random());
+};
+
+const generateFilm = (filmId, filmComments) => {
+  return {
+    id: filmId,
     name: getRandomArrayItem(FILM_NAMES),
     director: getRandomArrayItem(DIRECTORS),
     poster: getRandomArrayItem(POSTERS),
@@ -121,17 +119,33 @@ const generateFilm = () => {
     rating: getRandomNumber(Rating.MIN, Rating.MAX),
     age: getRandomArrayItem(AGE_RATINGS),
     releaseDate: getRandomDate(),
+    comments: filmComments,
     isWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
     emoji: null,
   };
-  film.comments = generationComments(film.id, COMMENTS_COUNT);
-  return film;
 };
 
-export const generateFilms = (count = 18) => {
+export const generateFilmIds = (count = 18) => {
   return new Array(count)
     .fill(``)
-    .map(generateFilm);
+    .map(generateFilmId);
 };
+
+export const generateFilms = (filmIds, comments) => {
+  const films = [];
+  filmIds.forEach((filmId) => {
+    const filmComments = comments.filter((comment) => comment.filmId === filmId);
+    films.push(generateFilm(filmId, filmComments));
+  });
+  return films;
+};
+
+export const generateComments = (filmIds) => {
+  const comments = [];
+  filmIds.forEach((filmId) => comments.push(generationComments(filmId, Math.floor(Math.random() * 20))));
+  return comments.flat();
+};
+
+
