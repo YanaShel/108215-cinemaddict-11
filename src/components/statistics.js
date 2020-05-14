@@ -1,6 +1,14 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import {GENRES} from "../const";
+
+const BAR_HEIGHT = 50;
+const FILTER_ID_PREFIX = `statistic-`;
+
+const getFilterNameById = (id) => {
+  return id.substring(FILTER_ID_PREFIX.length);
+};
 
 const Filters = [
   {id: `all-time`, name: `All time`},
@@ -11,8 +19,14 @@ const Filters = [
 ];
 
 export default class Statistics extends AbstractSmartComponent {
-  constructor() {
+  constructor(filmsModel) {
     super();
+
+    this._filmsModel = filmsModel;
+    this._films = this._filmsModel.getFilms().filter((film) => film.isWatched);
+    this._chartData = this._getCountFilmsByGenre(this._films);
+    this._activeFilter = Filters[0].id;
+    this._getSelectedFilterType();
 
   }
 
@@ -53,9 +67,14 @@ export default class Statistics extends AbstractSmartComponent {
     ).trim();
   }
 
+  recoveryListeners() {
+    this._getSelectedFilterType();
+  }
+
   _createStatisticFilterMarkup(id, name) {
+    const checked = id === this._activeFilter;
     return (
-      `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${id}" value="${id}" checked>
+      `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${id}" value="${id}" ${checked ? `checked` : ``}>
        <label for="statistic-${id}" class="statistic__filters-label">${name}</label>`
     );
   }
@@ -63,4 +82,32 @@ export default class Statistics extends AbstractSmartComponent {
   _getStatisticFiltersMarkup() {
     return Filters.map(({id, name}) => this._createStatisticFilterMarkup(id, name)).join(`\n`);
   }
+
+  _getSelectedFilterType() {
+    this.getElement().querySelector(`.statistic__filters`)
+      .addEventListener(`click`, (evt) => {
+        const filterItem = evt.target.control;
+        if (!filterItem) {
+          return;
+        }
+        const filter = filterItem.id;
+        this._activeFilter = getFilterNameById(filter);
+        this.rerender();
+      });
+  }
+
+  _getCountFilmsByGenre(films) {
+    let result = [];
+    if (films.length) {
+      result = GENRES.map((genre) => {
+        const genres = films.map((film) => film.genres).flat();
+        return {
+          genre,
+          count: genres.filter((genreItem) => genreItem === genre).length,
+        };
+      }).sort((a, b) => b.count - a.count);
+    }
+    return result;
+  }
+
 }

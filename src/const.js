@@ -4,3 +4,13 @@ export const FilterType = {
   history: `History`,
   favorites: `Favorites`
 };
+
+export const GENRES = [
+  `Musical`,
+  `Western`,
+  `Drama`,
+  `Comedy`,
+  `Cartoon`,
+  `Mystery`,
+  `Film-Noir`
+];

@@ -50,7 +50,7 @@ mainElement.addEventListener(`click`, (evt) => {
         remove(statistic);
       }
       pageController.hide();
-      statistic = new Statistics();
+      statistic = new Statistics(moviesModel);
       render(mainElement, statistic);
       break;
     case filterButton:
