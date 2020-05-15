@@ -91,6 +91,15 @@ const getRandomDate = () => {
   return targetDate;
 };
 
+const getRandomWatchingDate = () => {
+  const targetDate = new Date();
+  const day = getRandomIntegerNumber(1, new Date().getDate() + 1);
+  const month = new Date().getMonth();
+  const year = new Date().getFullYear();
+  targetDate.setFullYear(year, month, day);
+  return targetDate;
+};
+
 const generateFilmId = () => {
   return String(new Date() + Math.random());
 };
@@ -114,6 +123,7 @@ const generateFilm = (filmId, filmComments) => {
     isWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
+    watchingDate: getRandomWatchingDate(),
     emoji: null,
   };
 };

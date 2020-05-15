@@ -1,6 +1,7 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import moment from "moment";
 import {GENRES} from "../const";
 
 const BAR_HEIGHT = 50;
@@ -18,17 +19,25 @@ const Filters = [
   {id: `year`, name: `Year`},
 ];
 
+const FILTER_OF_TIME = {
+  'today': `days`,
+  'week': `weeks`,
+  'month': `months`,
+  'year': `years`
+};
+
 export default class Statistics extends AbstractSmartComponent {
   constructor(filmsModel) {
     super();
-
+    this._activeFilter = Filters[0].id;
     this._filmsModel = filmsModel;
     this._films = this._filmsModel.getFilms().filter((film) => film.isWatched);
+    this._filteredFilms = this._films.slice();
     this._chartData = this._getCountFilmsByGenre(this._films);
-    this._activeFilter = Filters[0].id;
+    this._myChart = null;
+
     this._renderChart();
     this._getSelectedFilterType();
-
   }
 
   getTemplate() {
@@ -48,15 +57,15 @@ export default class Statistics extends AbstractSmartComponent {
             <ul class="statistic__text-list">
                 <li class="statistic__text-item">
                     <h4 class="statistic__item-title">You watched</h4>
-                    <p class="statistic__item-text">${this._films.length} <span class="statistic__item-description">movies</span></p>
+                    <p class="statistic__item-text">${this._filteredFilms.length} <span class="statistic__item-description">movies</span></p>
                 </li>
                 <li class="statistic__text-item">
                     <h4 class="statistic__item-title">Total duration</h4>
-                    <p class="statistic__item-text">${this._getFilmsDuration(this._films)} <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+                    <p class="statistic__item-text">${this._getFilmsDuration(this._filteredFilms)} <span class="statistic__item-description">h</span> 00 <span class="statistic__item-description">m</span></p>
                 </li>
                 <li class="statistic__text-item">
                     <h4 class="statistic__item-title">Top genre</h4>
-                    <p class="statistic__item-text">${this._films.length ? this._chartData[0].genre : ``}</p>
+                    <p class="statistic__item-text">${this._filteredFilms.length ? this._chartData[0].genre : ``}</p>
                 </li>
             </ul>
 
@@ -73,11 +82,11 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   rerender() {
+    this._filteredFilms = this._getFilteredFilms();
+    this._chartData = this._getCountFilmsByGenre(this._filteredFilms);
     super.rerender();
-
-    this._chartData = this._getCountFilmsByGenre(this._films);
+    this._renderChart();
   }
-
 
   _createStatisticFilterMarkup(id, name) {
     const checked = id === this._activeFilter;
@@ -89,6 +98,24 @@ export default class Statistics extends AbstractSmartComponent {
 
   _getStatisticFiltersMarkup() {
     return Filters.map(({id, name}) => this._createStatisticFilterMarkup(id, name)).join(`\n`);
+  }
+
+  _getFilteredFilms() {
+    const films = this._filmsModel.getFilms().filter((film) => film.isWatched);
+    const currentPeriod = this._activeFilter;
+
+    if (currentPeriod === Filters[0].id) {
+      return films;
+    }
+
+    return films.filter((film) => {
+      const watchingDate = moment(film.watchingDate);
+      const dateNow = moment();
+      const filterTime = FILTER_OF_TIME[currentPeriod];
+      const diff = dateNow.diff(watchingDate, filterTime);
+
+      return diff < 1;
+    });
   }
 
   _getSelectedFilterType() {
@@ -130,13 +157,14 @@ export default class Statistics extends AbstractSmartComponent {
     const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
     statisticCtx.height = BAR_HEIGHT * this._chartData.length;
 
-    const myChart = new Chart(statisticCtx, {
+    this._myChart = new Chart(statisticCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
         labels: this._chartData.map((item) => item.genre),
         datasets: [{
           data: this._chartData.map((item) => item.count),
+          barThickness: 24,
           backgroundColor: `#ffe800`,
           hoverBackgroundColor: `#ffe800`,
           anchor: `start`
@@ -165,7 +193,6 @@ export default class Statistics extends AbstractSmartComponent {
               display: false,
               drawBorder: false
             },
-            barThickness: 24
           }],
           xAxes: [{
             ticks: {
