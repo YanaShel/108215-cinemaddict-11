@@ -10,6 +10,8 @@ import {generateAllComments} from "./mock/film";
 import Comments from "./models/comments";
 import Statistics from "./components/statistics";
 
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`
+
 const USER_RATING_NAMES = [
   `Novice`,
   `Fun`,
@@ -25,7 +27,7 @@ const comments = generateAllComments(filmIdList);
 const commentsModel = new Comments();
 commentsModel.setComments(comments);
 
-const api = new API();
+const api = new API(AUTHORIZATION);
 const moviesModel = new MoviesModel();
 
 const userProfile = new UserProfile(getRandomArrayItem(USER_RATING_NAMES));
