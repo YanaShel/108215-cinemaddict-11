@@ -1,5 +1,6 @@
 import {getRandomArrayItem, getRandomArrayItems, getRandomIntegerNumber, getRandomNumber} from "../util/util";
 import {generateComments} from "./comments";
+import {GENRES} from "../const";
 
 const FILM_NAMES = [
   `The Dance of Life`,
@@ -75,16 +76,6 @@ const Duration = {
   MIN: 20,
   MAX: 150,
 };
-
-const GENRES = [
-  `Musical`,
-  `Western`,
-  `Drama`,
-  `Comedy`,
-  `Cartoon`,
-  `Mystery`,
-  `Film-Noir`
-];
 
 const Rating = {
   MIN: 1,

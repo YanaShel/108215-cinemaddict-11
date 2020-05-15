@@ -61,6 +61,16 @@ export default class PageController {
     this.renderFilms(this._mostCommentedList.getElement(), this._getMostCommentedFilms(films), this._onDataChange, this._onViewChange);
   }
 
+  hide() {
+    this._filmsBlock.hide();
+    this._sort.hide();
+  }
+
+  show() {
+    this._filmsBlock.show();
+    this._sort.show();
+  }
+
   renderFilms(filmListElement, films, onDataChange, onViewChange) {
     return films.map((film) => {
       const movie = new MovieController(filmListElement, onDataChange, onViewChange);
