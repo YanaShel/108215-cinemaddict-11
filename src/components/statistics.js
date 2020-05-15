@@ -1,8 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component";
+import {GENRES} from "../const";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import moment from "moment";
-import {GENRES} from "../const";
+import {formatFilmDuration} from "../util/date";
 
 const BAR_HEIGHT = 50;
 const FILTER_ID_PREFIX = `statistic-`;
@@ -11,7 +12,7 @@ const getFilterNameById = (id) => {
   return id.substring(FILTER_ID_PREFIX.length);
 };
 
-const Filters = [
+const FILTERS = [
   {id: `all-time`, name: `All time`},
   {id: `today`, name: `Today`},
   {id: `week`, name: `Week`},
@@ -29,7 +30,7 @@ const FILTER_OF_TIME = {
 export default class Statistics extends AbstractSmartComponent {
   constructor(filmsModel) {
     super();
-    this._activeFilter = Filters[0].id;
+    this._activeFilter = FILTERS[0].id;
     this._filmsModel = filmsModel;
     this._films = this._filmsModel.getFilms().filter((film) => film.isWatched);
     this._filteredFilms = this._films.slice();
@@ -61,7 +62,7 @@ export default class Statistics extends AbstractSmartComponent {
                 </li>
                 <li class="statistic__text-item">
                     <h4 class="statistic__item-title">Total duration</h4>
-                    <p class="statistic__item-text">${this._getFilmsDuration(this._filteredFilms)} <span class="statistic__item-description">h</span> 00 <span class="statistic__item-description">m</span></p>
+                    <p class="statistic__item-text">${formatFilmDuration(this._getFilmsDuration(this._filteredFilms))}</span></p>
                 </li>
                 <li class="statistic__text-item">
                     <h4 class="statistic__item-title">Top genre</h4>
@@ -97,14 +98,14 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _getStatisticFiltersMarkup() {
-    return Filters.map(({id, name}) => this._createStatisticFilterMarkup(id, name)).join(`\n`);
+    return FILTERS.map(({id, name}) => this._createStatisticFilterMarkup(id, name)).join(`\n`);
   }
 
   _getFilteredFilms() {
     const films = this._filmsModel.getFilms().filter((film) => film.isWatched);
     const currentPeriod = this._activeFilter;
 
-    if (currentPeriod === Filters[0].id) {
+    if (currentPeriod === FILTERS[0].id) {
       return films;
     }
 
