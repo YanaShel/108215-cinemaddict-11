@@ -12,8 +12,9 @@ const FILM_DETAILS_BUTTONS = [
 ];
 
 export default class FilmDetails extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, api) {
     super();
+    this._id = film.id;
     this._name = film.name;
     this._nameOriginal = film.nameOriginal;
     this._poster = film.poster;
@@ -36,6 +37,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setWatchedPopupBtnClickListener();
     this.setFavoritePopupBtnClickListener();
     this.setEmojiClickListener();
+
+    this._api = api;
+    this._getComments();
   }
 
   getTemplate() {
@@ -219,5 +223,14 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   _formatDate(date) {
     return moment(date).format(`DD MMMM YYYY`);
+  }
+
+  _getComments() {
+    this._api
+      .getComments(this._id)
+      .then((comments) => {
+        this._comments = comments;
+        this.rerender();
+      });
   }
 }

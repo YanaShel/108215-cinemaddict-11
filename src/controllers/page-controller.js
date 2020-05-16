@@ -12,7 +12,8 @@ const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
 export default class PageController {
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, api) {
+    this._api = api;
     this._container = container;
     this._filmsModel = filmsModel;
 
@@ -54,11 +55,11 @@ export default class PageController {
 
     this._topRatedList = new TopRatedList(films);
     render(filmBlock, this._topRatedList);
-    this.renderFilms(this._topRatedList.getElement(), this._getTopRatedFilms(films), this._onDataChange, this._onViewChange);
+    this.renderFilms(this._topRatedList.getElement(), this._getTopRatedFilms(films), this._onDataChange, this._onViewChange, this._api);
 
     this._mostCommentedList = new MostCommentedList();
     render(filmBlock, this._mostCommentedList);
-    this.renderFilms(this._mostCommentedList.getElement(), this._getMostCommentedFilms(films), this._onDataChange, this._onViewChange);
+    this.renderFilms(this._mostCommentedList.getElement(), this._getMostCommentedFilms(films), this._onDataChange, this._onViewChange, this._api);
   }
 
   hide() {
@@ -71,9 +72,9 @@ export default class PageController {
     this._sort.show();
   }
 
-  renderFilms(filmListElement, films, onDataChange, onViewChange) {
+  renderFilms(filmListElement, films, onDataChange, onViewChange, api) {
     return films.map((film) => {
-      const movie = new MovieController(filmListElement, onDataChange, onViewChange);
+      const movie = new MovieController(filmListElement, onDataChange, onViewChange, api);
       movie.render(film, FilmState.DEFAULT);
 
       return movie;
@@ -81,7 +82,7 @@ export default class PageController {
   }
 
   _renderFilms(films) {
-    const newFilms = this.renderFilms(this._filmsList.getElement(), films, this._onDataChange, this._onViewChange);
+    const newFilms = this.renderFilms(this._filmsList.getElement(), films, this._onDataChange, this._onViewChange, this._api);
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
     this._showingFilmsCount = this._showedFilmControllers.length;
   }
@@ -114,7 +115,6 @@ export default class PageController {
     let sortedFilms = [];
     const showingFilms = films.slice();
 
-    debugger;
     switch (sortType) {
       case `date`:
         sortedFilms = showingFilms.sort((a, b) => b.releaseDate - a.releaseDate);
@@ -131,10 +131,15 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const isSuccess = this._filmsModel.updateFilms(oldData.id, newData);
-    if (isSuccess) {
-      movieController.render(newData);
-    }
+    this._api.updateFilm(oldData.id, newData)
+      .then((filmModel) => {
+        const isSuccess = this._filmsModel.updateFilms(oldData.id, filmModel);
+
+        if (isSuccess) {
+          movieController.render(filmModel);
+          this._updateFilms(this._showingFilmsCount);
+        }
+      });
   }
 
   _onSortTypeChange(sortType) {

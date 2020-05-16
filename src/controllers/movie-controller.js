@@ -9,8 +9,9 @@ export const State = {
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
+    this._api = api;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._bodyElement = document.querySelector(`body`);
@@ -46,7 +47,7 @@ export default class MovieController {
         isFavorite: !film.isFavorite}));
     });
 
-    this._filmDetails = new FilmDetails(film);
+    this._filmDetails = new FilmDetails(film, this._api);
     this._filmDetails.setWatchlistPopupBtnClickListener(() => {
       this._onDataChange(this, film, Object.assign({}, film, {
         isWatchlist: !film.isWatchlist}));

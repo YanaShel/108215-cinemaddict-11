@@ -1,4 +1,5 @@
 import Movie from "./models/movie";
+import Comments from "./models/comments";
 
 const StatusCode = {
   OK: 200,
@@ -19,12 +20,26 @@ const API = class {
   }
 
   getFilms() {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-
     return this._load({url: `movies`})
       .then((response) => response.json())
       .then(Movie.parseFilms);
+  }
+
+  getComments(movieId) {
+    return this._load({url: `comments/${movieId}`})
+      .then((response) => response.json())
+      .then((Comments.parseComments));
+  }
+
+  updateFilm(id, movie) {
+    return this._load({
+      url: `movies/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(Movie.toRAW(movie)),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json())
+      .then(Movie.parseFilm);
   }
 
   _checkStatus(response) {
