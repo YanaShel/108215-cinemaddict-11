@@ -8,7 +8,7 @@ import {getRandomArrayItem} from "./util/util";
 
 import Statistics from "./components/statistics";
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`;
+const AUTHORIZATION = `Basic ufbdyf7ujkgdtejlo=`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const USER_RATING_NAMES = [

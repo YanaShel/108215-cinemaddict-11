@@ -99,7 +99,7 @@ export default class MovieController {
 
     if (oldFilmCard && oldFilmDetails) {
       replace(this._fimCard, oldFilmCard);
-      replace(this._filmDetails, oldFilmDetails);
+      // replace(this._filmDetails, oldFilmDetails);
     } else {
       render(this._container.querySelector(`.films-list__container`), this._fimCard);
     }
