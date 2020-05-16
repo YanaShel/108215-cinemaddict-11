@@ -12,5 +12,9 @@ export const GENRES = [
   `Comedy`,
   `Cartoon`,
   `Mystery`,
-  `Film-Noir`
+  `Film-Noir`,
+  `Action`,
+  `Horror`,
+  `Animation`,
+  `Adventure`,
 ];

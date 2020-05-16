@@ -5,6 +5,24 @@ import FilmDetailsComments from "./film-details-comments";
 import {formatFilmDuration} from "../../../util/date";
 import moment from "moment";
 
+class Observable {
+  constructor() {
+    this.subscribers = new Set();
+  }
+
+  subscribe(subscriber) {
+    this.subscribers.add(subscriber);
+  }
+
+  unsubscribe(subscriber) {
+    this.subscribers.delete(subscriber);
+  }
+
+  notify(changes) {
+    this.subscribers.forEach((subscriber) => subscriber(changes));
+  }
+}
+
 const FILM_DETAILS_BUTTONS = [
   {name: `Add to watchlist`, id: `watchlist`},
   {name: `Already watched`, id: `watched`},
@@ -12,9 +30,11 @@ const FILM_DETAILS_BUTTONS = [
 ];
 
 export default class FilmDetails extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, api) {
     super();
+    this._id = film.id;
     this._name = film.name;
+    this._nameOriginal = film.nameOriginal;
     this._poster = film.poster;
     this._description = film.description;
     this._comments = film.comments;
@@ -35,6 +55,14 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setWatchedPopupBtnClickListener();
     this.setFavoritePopupBtnClickListener();
     this.setEmojiClickListener();
+
+    this._api = api;
+    this._getComments();
+
+    this.commentsChanges = new Observable();
+    this.watchListChanges = new Observable();
+    this.watchedChanges = new Observable();
+    this.favoritesChanges = new Observable();
   }
 
   getTemplate() {
@@ -61,7 +89,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                         ${this._poster}
                     " alt="">
                     <p class="film-details__age">
-                        ${this._age}
+                        ${this._age}+
                     </p>
                   </div>
 
@@ -72,7 +100,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                             ${this._name}
                         </h3>
                         <p class="film-details__title-original">Original:
-                            ${this._name}
+                            ${this._nameOriginal}
                         </p>
                       </div>
 
@@ -90,11 +118,11 @@ export default class FilmDetails extends AbstractSmartComponent {
                         </tr>
                         <tr class="film-details__row">
                             <td class="film-details__term">Writers</td>
-                            <td class="film-details__cell">${this._writers}</td>
+                            <td class="film-details__cell">${this._writers.join(`, `)}</td>
                         </tr>
                         <tr class="film-details__row">
                             <td class="film-details__term">Actors</td>
-                            <td class="film-details__cell">${this._actors}</td>
+                            <td class="film-details__cell">${this._actors.join(`, `)}</td>
                         </tr>
                         <tr class="film-details__row">
                             <td class="film-details__term">Release Date</td>
@@ -115,7 +143,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                     </table>
 
                     <p class="film-details__film-description">
-                        ${this._description.join(`\n`)}
+                        ${this._description}
                     </p>
                   </div>
                 </div>
@@ -136,9 +164,9 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setCloseButtonClickListener(this._closePopupListener);
-    this.setWatchlistPopupBtnClickListener();
-    this.setWatchedPopupBtnClickListener();
-    this.setFavoritePopupBtnClickListener();
+    this.setWatchlistPopupBtnClickListener(this._watchlistListener);
+    this.setWatchedPopupBtnClickListener(this._watchedListener);
+    this.setFavoritePopupBtnClickListener(this._favoriteListener);
     this.setEmojiClickListener();
     this.setDeleteButtonClickListener(this._deleteButtonListener);
     this.setAddCommentListener(this._setCommentListener);
@@ -197,18 +225,31 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setWatchlistPopupBtnClickListener(listener) {
-    this.getElement().querySelector(`#watchlist`)
-      .addEventListener(`click`, listener);
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault()
+        this._toggleWatchList();
+      });
+
+    this._watchlistListener = listener;
   }
 
   setWatchedPopupBtnClickListener(listener) {
-    this.getElement().querySelector(`#watched`)
-      .addEventListener(`click`, listener);
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, () => {
+        this._toggleWatched();
+      });
+
+    this._watchedListener = listener;
   }
 
   setFavoritePopupBtnClickListener(listener) {
-    this.getElement().querySelector(`#favorite`)
-      .addEventListener(`click`, listener);
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, () => {
+        this._toggleFavorites();
+      });
+
+    this._favoriteListener = listener;
   }
 
   setEmojiClickListener(listener) {
@@ -219,4 +260,32 @@ export default class FilmDetails extends AbstractSmartComponent {
   _formatDate(date) {
     return moment(date).format(`DD MMMM YYYY`);
   }
+
+  _getComments() {
+    this._api
+      .getComments(this._id)
+      .then((comments) => {
+        this._comments = comments;
+        this.rerender();
+      });
+  }
+
+  _toggleWatchList() {
+    this._isWatchlist = !this._isWatchlist;
+    this.watchListChanges.notify(this._isWatchlist);
+    this.rerender();
+  }
+
+  _toggleWatched() {
+    this._isWatched = !this._isWatched;
+    this.watchedChanges.notify(this._isWatched);
+    this.rerender();
+  }
+
+  _toggleFavorites() {
+    this._isFavorite = !this._isFavorite;
+    this.favoritesChanges.notify(this._isFavorite);
+    this.rerender();
+  }
+
 }

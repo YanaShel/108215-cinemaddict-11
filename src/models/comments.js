@@ -1,34 +1,17 @@
 export default class Comments {
-  constructor() {
-    this._comments = [];
-
-    this._dataChangeListener = [];
+  constructor(comment) {
+    this.id = comment[`id`];
+    this.emotion = comment[`emotion`];
+    this.author = comment[`author`];
+    this.message = comment[`comment`];
+    this.date = comment[`date`];
   }
 
-  getComments() {
-    return this._comments;
+  static parseComment(comment) {
+    return new Comments(comment);
   }
 
-  setComments(comments) {
-    this._comments = Array.from(comments);
-    this._callListeners(this._dataChangeListener);
-  }
-
-  updateFilms(id, comment) {
-    const index = this._comments.findIndex((item) => item.id === id);
-
-    if (index === -1) {
-      return false;
-    }
-
-    this._comments = [].concat(this._comments.slice(0, index), comment, this._comments.slice(index + 1));
-
-    this._callListeners(this._dataChangeListener);
-
-    return true;
-  }
-
-  _callListeners(listeners) {
-    listeners.forEach((listener) => listener());
+  static parseComments(comment) {
+    return comment.map(Comments.parseComment);
   }
 }

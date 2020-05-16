@@ -55,10 +55,13 @@ export default class FilmDetailsComments extends AbstractComponent {
   }
 
   _createCommentMarkup({id, emotion, author, date, message}) {
+    if (!message) {
+      return ``;
+    }
     return (
       `<li class="film-details__comment" id="${id}">
             <span class="film-details__comment-emoji">
-                <img src="${emotion}" width="55" height="55" alt="emoji-${emotion}">
+                <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
             </span>
             <div>
                 <p class="film-details__comment-text">${encode(message)}</p>
