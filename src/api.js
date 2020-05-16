@@ -1,13 +1,48 @@
+import Movie from "./models/movie";
+
+const StatusCode = {
+  OK: 200,
+  MULTIPLE_CHOICE: 300
+};
+
+const Method = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
+
 const API = class {
-  constructor(authorization) {
+  constructor(endPoint, authorization) {
+    this._endPoint = endPoint;
     this._authorization = authorization;
   }
+
   getFilms() {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict`, {headers})
-      .then((response) => response.json());
+    return this._load({url: `movies`})
+      .then((response) => response.json())
+      .then(Movie.parseFilms);
+  }
+
+  _checkStatus(response) {
+    if (response.status >= StatusCode.OK && response.status < StatusCode.MULTIPLE_CHOICE) {
+      return response;
+    } else {
+      throw new Error(`${response.status}: ${response.statusText}`);
+    }
+  }
+
+  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+    headers.append(`Authorization`, this._authorization);
+
+    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
+      .then(this._checkStatus)
+      .catch((err) => {
+        throw err;
+      });
   }
 };
 

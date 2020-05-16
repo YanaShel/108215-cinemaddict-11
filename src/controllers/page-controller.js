@@ -114,6 +114,7 @@ export default class PageController {
     let sortedFilms = [];
     const showingFilms = films.slice();
 
+    debugger;
     switch (sortType) {
       case `date`:
         sortedFilms = showingFilms.sort((a, b) => b.releaseDate - a.releaseDate);

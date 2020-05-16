@@ -10,7 +10,8 @@ import {generateAllComments} from "./mock/film";
 import Comments from "./models/comments";
 import Statistics from "./components/statistics";
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`;
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const USER_RATING_NAMES = [
   `Novice`,
@@ -27,7 +28,7 @@ const comments = generateAllComments(filmIdList);
 const commentsModel = new Comments();
 commentsModel.setComments(comments);
 
-const api = new API(AUTHORIZATION);
+const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
 
 const userProfile = new UserProfile(getRandomArrayItem(USER_RATING_NAMES));

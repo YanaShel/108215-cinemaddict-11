@@ -15,6 +15,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._name = film.name;
+    this._nameOriginal = film.nameOriginal;
     this._poster = film.poster;
     this._description = film.description;
     this._comments = film.comments;
@@ -61,7 +62,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                         ${this._poster}
                     " alt="">
                     <p class="film-details__age">
-                        ${this._age}
+                        ${this._age}+
                     </p>
                   </div>
 
@@ -72,7 +73,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                             ${this._name}
                         </h3>
                         <p class="film-details__title-original">Original:
-                            ${this._name}
+                            ${this._nameOriginal}
                         </p>
                       </div>
 
@@ -90,11 +91,11 @@ export default class FilmDetails extends AbstractSmartComponent {
                         </tr>
                         <tr class="film-details__row">
                             <td class="film-details__term">Writers</td>
-                            <td class="film-details__cell">${this._writers}</td>
+                            <td class="film-details__cell">${this._writers.join(`, `)}</td>
                         </tr>
                         <tr class="film-details__row">
                             <td class="film-details__term">Actors</td>
-                            <td class="film-details__cell">${this._actors}</td>
+                            <td class="film-details__cell">${this._actors.join(`, `)}</td>
                         </tr>
                         <tr class="film-details__row">
                             <td class="film-details__term">Release Date</td>
@@ -115,7 +116,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                     </table>
 
                     <p class="film-details__film-description">
-                        ${this._description.join(`\n`)}
+                        ${this._description}
                     </p>
                   </div>
                 </div>
