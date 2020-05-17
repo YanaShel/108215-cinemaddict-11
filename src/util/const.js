@@ -9,7 +9,24 @@ export const Key = {
   ESCAPE: `Escape`,
 };
 
-export const getRandomArrayItem = (array) => {
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
+export const Rang = {
+  NOVICE: `Novice`,
+  FAN: `Fan`,
+  BUFF: `Movie Buff`,
 };
+
+export const NoviceCount = {
+  MIN: 1,
+  MAX: 10,
+};
+
+export const FanCount = {
+  MIN: 11,
+  MAX: 20,
+};
+
+export const MovieBuffCount = {
+  MIN: 21,
+  MAX: Infinity,
+};
+

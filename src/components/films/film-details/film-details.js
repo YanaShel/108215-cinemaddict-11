@@ -2,7 +2,7 @@ import AbstractSmartComponent from "../../abstract-smart-component";
 import FilmDetailsGenre from "./film-details-genre";
 import FilmDetailsButton from "./film-details-button";
 import FilmDetailsComments from "./film-details-comments";
-import {formatFilmDuration} from "../../../util/date";
+import {formatFilmDuration} from "../../../util/common";
 import moment from "moment";
 
 const COUNT_GENRES = 1;

@@ -1,5 +1,5 @@
 import AbstractComponent from "../../abstract-component";
-import {formatFilmDuration} from "../../../util/date";
+import {formatFilmDuration} from "../../../util/common";
 import moment from "moment";
 
 const FILM_CARD_BUTTONS = [

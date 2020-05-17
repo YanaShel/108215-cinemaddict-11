@@ -1,8 +1,8 @@
 import AbstractSmartComponent from "./abstract-smart-component";
+import {formatFilmDuration, getRang} from "../util/common";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import moment from "moment";
-import {formatFilmDuration} from "../util/date";
 
 const BAR_HEIGHT = 50;
 const FILTER_ID_PREFIX = `statistic-`;
@@ -46,7 +46,7 @@ export default class Statistics extends AbstractSmartComponent {
             <p class="statistic__rank">
                 Your rank
                 <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-                <span class="statistic__rank-label">Sci-Fighter</span>
+                <span class="statistic__rank-label">${getRang(this._films)}</span>
             </p>
 
             <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
