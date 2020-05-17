@@ -133,17 +133,20 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _getCountFilmsByGenre(films) {
-    let result = [];
+    let results = [];
     if (films.length) {
-      result = GENRES.map((genre) => {
-        const genres = films.map((film) => film.genres).flat();
-        return {
-          genre,
-          count: genres.filter((genreItem) => genreItem === genre).length,
+      const genres = films.map((film) => film.genres).flat();
+      const uniqueGenres = new Set(genres);
+      uniqueGenres.forEach((item) => {
+        const result = {
+          genre: item,
+          count: genres.filter((genreItem) => genreItem === item).length,
         };
-      }).sort((a, b) => b.count - a.count);
+        results.push(result);
+      });
+      results.sort((a, b) => b.count - a.count);
     }
-    return result;
+    return results;
   }
 
   _getFilmsDuration(films) {
