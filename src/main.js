@@ -1,5 +1,6 @@
 import API from "./api";
 import UserProfile from "./components/profile/user-profile";
+import FilmsStatistics from "./components/films-statistics";
 import FilterController from "./controllers/filter-controller";
 import PageController from "./controllers/page-controller";
 import MoviesModel from "./models/movies";
@@ -19,6 +20,7 @@ const USER_RATING_NAMES = [
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
+const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 
 const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
@@ -61,6 +63,7 @@ api.getFilms()
   .then((films) => {
     moviesModel.setFilms(films);
     pageController.render();
+    render(footerStatisticsElement, new FilmsStatistics(films));
   });
 
 
