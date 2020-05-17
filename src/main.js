@@ -5,7 +5,7 @@ import FilterController from "./controllers/filter-controller";
 import PageController from "./controllers/page-controller";
 import MoviesModel from "./models/movies";
 import {remove, render} from "./util/dom-util";
-import {getRandomArrayItem} from "./util/util";
+import {getRandomArrayItem} from "./util/const";
 
 import Statistics from "./components/statistics";
 

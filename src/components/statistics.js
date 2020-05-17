@@ -1,5 +1,4 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {GENRES} from "../const";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import moment from "moment";

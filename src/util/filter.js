@@ -1,4 +1,4 @@
-import {FilterType} from "../const";
+import {FilterType} from "./const";
 
 export const getFilmsByFilter = (films, filterType) => {
   switch (filterType) {

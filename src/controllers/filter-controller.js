@@ -1,5 +1,5 @@
 import Filters from "../components/filters/filters";
-import {FilterType} from "../const";
+import {FilterType} from "../util/const";
 import {render, replace} from "../util/dom-util";
 import {getFilmsByFilter} from "../util/filter";
 

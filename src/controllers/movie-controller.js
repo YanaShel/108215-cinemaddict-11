@@ -1,7 +1,7 @@
 import FilmCard from "../components/films/main-list/film-card";
 import FilmDetails from "../components/films/film-details/film-details";
 import {render, replace, remove} from "../util/dom-util";
-import {Key} from "../util/util";
+import {Key} from "../util/const";
 
 export const State = {
   DEFAULT: `default`,

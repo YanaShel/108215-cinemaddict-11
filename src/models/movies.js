@@ -1,4 +1,4 @@
-import {FilterType} from "../const";
+import {FilterType} from "../util/const";
 import {getFilmsByFilter} from "../util/filter";
 
 export default class Movies {
