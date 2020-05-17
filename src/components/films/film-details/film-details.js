@@ -5,6 +5,8 @@ import FilmDetailsComments from "./film-details-comments";
 import {formatFilmDuration} from "../../../util/date";
 import moment from "moment";
 
+const COUNT_GENRES = 1;
+
 class Observable {
   constructor() {
     this.subscribers = new Set();
@@ -137,7 +139,7 @@ export default class FilmDetails extends AbstractSmartComponent {
                             <td class="film-details__cell">${this._country}</td>
                         </tr>
                         <tr class="film-details__row">
-                            <td class="film-details__term">Genres</td>
+                            <td class="film-details__term">${this._getTitleGenre(this._genres)}</td>
                             <td class="film-details__cell">${genresMarkup}</td>
                         </tr>
                     </table>
@@ -227,7 +229,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   setWatchlistPopupBtnClickListener(listener) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`)
       .addEventListener(`click`, (evt) => {
-        evt.preventDefault()
+        evt.preventDefault();
         this._toggleWatchList();
       });
 
@@ -268,6 +270,10 @@ export default class FilmDetails extends AbstractSmartComponent {
         this._comments = comments;
         this.rerender();
       });
+  }
+
+  _getTitleGenre(genres) {
+    return genres.length > COUNT_GENRES ? `Genres` : `Genre`;
   }
 
   _toggleWatchList() {
