@@ -19,8 +19,9 @@ export default class MovieController {
     this._filmDetails = null;
     this._state = State.DEFAULT;
 
-    this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._onFilmCardClick = this._onFilmCardClick.bind(this);
+    this._closeFilmDetailsPopup = this._closeFilmDetailsPopup.bind(this);
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
   render(film, state) {
@@ -48,17 +49,21 @@ export default class MovieController {
     });
 
     this._filmDetails = new FilmDetails(film, this._api);
-    this._filmDetails.setWatchlistPopupBtnClickListener(() => {
+    this._filmDetails.setWatchlistPopupBtnClickListener();
+
+    this._filmDetails.watchListChanges.subscribe((inWatchlist) => {
       this._onDataChange(this, film, Object.assign({}, film, {
-        isWatchlist: !film.isWatchlist}));
+        isWatchlist: inWatchlist}));
     });
-    this._filmDetails.setWatchedPopupBtnClickListener(() => {
+    this._filmDetails.setWatchedPopupBtnClickListener();
+    this._filmDetails.watchedChanges.subscribe((inWatched) => {
       this._onDataChange(this, film, Object.assign({}, film, {
-        isWatched: !film.isWatched}));
+        isWatched: inWatched}));
     });
-    this._filmDetails.setFavoritePopupBtnClickListener(() => {
+    this._filmDetails.setFavoritePopupBtnClickListener();
+    this._filmDetails.favoritesChanges.subscribe((inFavorite) => {
       this._onDataChange(this, film, Object.assign({}, film, {
-        isFavorite: !film.isFavorite}));
+        isFavorite: inFavorite}));
     });
     this._filmDetails.setEmojiClickListener((evt) => {
       const emojiContainer = this._filmDetails.getElement().querySelector(`.film-details__add-emoji-label`);
@@ -93,13 +98,9 @@ export default class MovieController {
         this._onDataChange(this, film, Object.assign(film, {comments: newComments}));
       }
     });
-    this._filmDetails.setCloseButtonClickListener(() => {
-      this._closeFilmDetailsPopup();
-    });
 
     if (oldFilmCard && oldFilmDetails) {
       replace(this._fimCard, oldFilmCard);
-      // replace(this._filmDetails, oldFilmDetails);
     } else {
       render(this._container.querySelector(`.films-list__container`), this._fimCard);
     }
@@ -117,6 +118,7 @@ export default class MovieController {
   }
 
   _closeFilmDetailsPopup() {
+    this._state = State.DEFAULT;
     this._filmDetails.resetAddCommentForm();
     this._filmDetails.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
@@ -136,10 +138,7 @@ export default class MovieController {
     render(this._bodyElement, this._filmDetails);
     this._state = State.DETAILS;
 
-    document.addEventListener(`keydown`, this._onEscKeyDown);
-    this._filmDetails.setCloseButtonClickListener(() => {
-      this._closeFilmDetailsPopup();
-    });
+    this._filmDetails.setCloseButtonClickListener();
+    this._filmDetails.setCloseEscListener();
   }
-
 }
