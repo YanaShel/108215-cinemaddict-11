@@ -2,6 +2,8 @@ import AbstractComponent from "../../abstract-component";
 import {formatFilmDuration} from "../../../util/common";
 import moment from "moment";
 
+const SHORT_DESCRIPTION_LENGTH = 140;
+
 const FILM_CARD_BUTTONS = [
   {name: `Add to watchlist`, className: `add-to-watchlist`},
   {name: `Mark as watched`, className: `mark-as-watched`},
@@ -38,7 +40,7 @@ export default class FilmCard extends AbstractComponent {
                 <span class="film-card__genre">${this._genres.length > 0 ? this._genres[0] : ``}</span>
             </p>
             <img src="${this._poster}" alt="" class="film-card__poster">
-            <p class="film-card__description">${this._description}</p>
+            <p class="film-card__description">${this._getShortDescription(this._description)}</p>
             <a class="film-card__comments">${this._comments.length} comments</a>
             <form class="film-card__controls">
                 ${watchlistButton}
@@ -78,5 +80,11 @@ export default class FilmCard extends AbstractComponent {
              ${name}
          </button>
       `).trim();
+  }
+
+  _getShortDescription(description) {
+    return description.length >= SHORT_DESCRIPTION_LENGTH ?
+      `${description.slice(0, SHORT_DESCRIPTION_LENGTH - 1)}...` :
+      description;
   }
 }
