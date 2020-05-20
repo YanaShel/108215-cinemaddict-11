@@ -61,8 +61,8 @@ export default class MovieController {
         isFavorite: inFavorite}));
     });
     this._filmDetails.commentsChanges.subscribe((comments) => {
-      const filmItem = Object.assign(film, {comments});
-      this.render(filmItem);
+      const filmItem = Object.assign({}, film, {comments});
+      this._onDataChange(this, film, filmItem, true);
     });
 
     if (oldFilmCard && oldFilmDetails) {

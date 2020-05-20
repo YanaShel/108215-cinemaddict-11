@@ -1,29 +1,13 @@
 import AbstractSmartComponent from "../../abstract-smart-component";
 import FilmDetailsGenre from "./film-details-genre";
 import FilmDetailsComments from "./film-details-comments";
+import Observable from "../../../observable";
 import {formatFilmDuration} from "../../../util/common";
 import moment from "moment";
 import {Key} from "../../../util/const";
 
 const COUNT_GENRES = 1;
-
-class Observable {
-  constructor() {
-    this.subscribers = new Set();
-  }
-
-  subscribe(subscriber) {
-    this.subscribers.add(subscriber);
-  }
-
-  unsubscribe(subscriber) {
-    this.subscribers.delete(subscriber);
-  }
-
-  notify(changes) {
-    this.subscribers.forEach((subscriber) => subscriber(changes));
-  }
-}
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 const FILM_DETAILS_BUTTONS = [
   {name: `Add to watchlist`, id: `watchlist`},
@@ -56,6 +40,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._newEmoji = null;
     this._deleteButtonListener = null;
     this._setCommentListener = null;
+    this._commentInputField = null;
+    this._activeDeleteCommentButtons = null;
+    this._filmDetailsComment = null;
 
     this._getComments();
     this._setEmojiClickListener();
@@ -241,10 +228,11 @@ export default class FilmDetails extends AbstractSmartComponent {
           btn.addEventListener(`click`, (evt) => {
             evt.preventDefault();
 
-            const deleteButton = evt.target;
-            const comment = deleteButton.closest(`.film-details__comment`);
-            const removeCommentId = comment.id;
+            this._activeDeleteCommentButtons = evt.target;
+            this._addButtonRemoveActiveState();
 
+            this._filmDetailsComment = this._activeDeleteCommentButtons.closest(`.film-details__comment`);
+            const removeCommentId = this._filmDetailsComment.id;
             this._deleteComment(removeCommentId);
           });
         });
@@ -265,10 +253,11 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   _setPostCommentListener() {
-    const textComment = this._element.querySelector(`.film-details__comment-input`);
-    textComment.addEventListener(`keydown`, (evt) => {
+    this._commentInputField = this._element.querySelector(`.film-details__comment-input`);
+    this._commentInputField.addEventListener(`keydown`, (evt) => {
       const isCtrlAndEnter = evt.code === `Enter` && evt.ctrlKey;
       if (isCtrlAndEnter) {
+        this._commentInputField.setAttribute(`disabled`, `disabled`);
         const comment = this.collectComment();
         if (!comment) {
           return;
@@ -309,6 +298,12 @@ export default class FilmDetails extends AbstractSmartComponent {
         this._comments = comments;
         this.commentsChanges.notify(this._comments.map((commentItem) => commentItem.id));
         this.rerender();
+        this.resetAddCommentForm();
+      })
+      .catch(() => {
+        this._shake(this.getElement().querySelector(`.film-details__comment-label`));
+        this._addRedBorderStyleToField();
+        this._returnsTextFieldToDefaultState();
       });
   }
 
@@ -318,6 +313,10 @@ export default class FilmDetails extends AbstractSmartComponent {
         this._comments = this._comments.filter((comment) => comment.id !== id);
         this.commentsChanges.notify(this._comments.map((comment) => comment.id));
         this.rerender();
+      })
+      .catch(() => {
+        this._shake(this._filmDetailsComment);
+        this._returnsDeleteButtonToDefaultState();
       });
   }
 
@@ -356,4 +355,29 @@ export default class FilmDetails extends AbstractSmartComponent {
     }
   }
 
+  _addRedBorderStyleToField() {
+    this._commentInputField.style.border = `1px solid red`;
+  }
+
+  _returnsTextFieldToDefaultState() {
+    this._commentInputField.removeAttribute(`disabled`);
+  }
+
+  _addButtonRemoveActiveState() {
+    this._activeDeleteCommentButtons.setAttribute(`disabled`, `disabled`);
+    this._activeDeleteCommentButtons.innerText = `Deleting…`;
+  }
+
+  _returnsDeleteButtonToDefaultState() {
+    this._activeDeleteCommentButtons.innerText = `Delete`;
+    this._activeDeleteCommentButtons.removeAttribute(`disabled`);
+  }
+
+  _shake(element) {
+    element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      element.style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
 }
