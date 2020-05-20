@@ -14,4 +14,13 @@ export default class Comments {
   static parseComments(comment) {
     return comment.map(Comments.parseComment);
   }
+
+  static toRAW(data) {
+    return {
+      "comment": data.message,
+      "date": data.date,
+      "emotion": data.emotion,
+      "author": data.author
+    };
+  }
 }

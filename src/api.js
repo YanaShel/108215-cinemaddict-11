@@ -31,6 +31,21 @@ const API = class {
       .then((Comments.parseComments));
   }
 
+  postComment(movieId, data) {
+    return this._load({
+      url: `comments/${movieId}`,
+      method: Method.POST,
+      body: JSON.stringify(Comments.toRAW(data)),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json())
+      .then((film) => Comments.parseComments(film.comments));
+  }
+
+  deleteComment(id) {
+    return this._load({url: `comments/${id}`, method: Method.DELETE});
+  }
+
   updateFilm(id, movie) {
     return this._load({
       url: `movies/${id}`,

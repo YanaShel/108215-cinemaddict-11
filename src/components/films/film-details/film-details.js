@@ -34,6 +34,7 @@ const FILM_DETAILS_BUTTONS = [
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film, api) {
     super();
+    this._api = api;
     this._id = film.id;
     this._name = film.name;
     this._nameOriginal = film.nameOriginal;
@@ -52,16 +53,12 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._isWatchlist = film.isWatchlist;
     this._isWatched = film.isWatched;
     this._isFavorite = film.isFavorite;
-
+    this._newEmoji = null;
     this._deleteButtonListener = null;
     this._setCommentListener = null;
-    this._closeFilmDetailsPopup = null;
-    this._commentsComponent = null;
 
-    this.setEmojiClickListener();
-
-    this._api = api;
     this._getComments();
+    this._setEmojiClickListener();
 
     this.commentsChanges = new Observable();
     this.watchListChanges = new Observable();
@@ -78,7 +75,7 @@ export default class FilmDetails extends AbstractSmartComponent {
       .map((genre) => new FilmDetailsGenre(genre).getTemplate())
       .join(`\n`);
 
-    const commentsMarkup = new FilmDetailsComments(this._comments).getTemplate();
+    const commentsMarkup = new FilmDetailsComments(this._comments, this._newEmoji).getTemplate();
 
     return (
       `<section class="film-details">
@@ -174,9 +171,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setFavoritePopupBtnClickListener();
     this.setCloseButtonClickListener();
     this.setCloseEscListener();
-    this.setEmojiClickListener();
-    this.setDeleteButtonClickListener(this._deleteButtonListener);
-    this.setAddCommentListener(this._setCommentListener);
+    this._setEmojiClickListener();
+    this._setDeleteButtonClickListener(this._deleteButtonListener);
+    this._setPostCommentListener(this._setCommentListener);
   }
 
   setWatchlistPopupBtnClickListener() {
@@ -213,39 +210,17 @@ export default class FilmDetails extends AbstractSmartComponent {
     document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 
-  setDeleteButtonClickListener(listener) {
-    const deleteCommentButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
-    if (deleteCommentButtons) {
-      Array.from(deleteCommentButtons)
-        .forEach((btn) => {
-          btn.addEventListener(`click`, listener);
-        });
-    }
-
-    this._deleteButtonListener = listener;
-  }
-
-  setEmojiClickListener(listener) {
-    this.getElement().querySelector(`.film-details__emoji-list`)
-      .addEventListener(`change`, listener);
-  }
-
   collectComment() {
     const textComment = this._element.querySelector(`.film-details__comment-input`);
-    const emojiElement = this._element.querySelector(`.film-details__add-emoji-label`).firstElementChild;
-
     const message = textComment.value;
-    const emotion = emojiElement ? emojiElement.attributes[0].value : ``;
+    const emotion = this._newEmoji;
 
-    if (!emotion || !message) {
+    if (!emotion && !message) {
       return null;
     }
-
     const date = new Date();
     const id = String(new Date() + Math.random());
-    const author = `Неопознаный энот`;
-
-    return {message, emotion, date, id, author};
+    return {message, emotion, date, id};
   }
 
   resetAddCommentForm() {
@@ -258,10 +233,50 @@ export default class FilmDetails extends AbstractSmartComponent {
     }
   }
 
-  setAddCommentListener(listener) {
-    const textComment = this.getElement().querySelector(`.film-details__comment-input`);
-    textComment.addEventListener(`keydown`, listener);
-    this._setCommentListener = listener;
+  _setDeleteButtonClickListener(listener) {
+    const deleteCommentButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    if (deleteCommentButtons) {
+      Array.from(deleteCommentButtons)
+        .forEach((btn) => {
+          btn.addEventListener(`click`, (evt) => {
+            evt.preventDefault();
+
+            const deleteButton = evt.target;
+            const comment = deleteButton.closest(`.film-details__comment`);
+            const removeCommentId = comment.id;
+
+            this._deleteComment(removeCommentId);
+          });
+        });
+    }
+
+    this._deleteButtonListener = listener;
+  }
+
+  _setEmojiClickListener() {
+    this.getElement().querySelector(`.film-details__emoji-list`)
+      .addEventListener(`click`, (evt) => {
+        const emojiElement = evt.target.closest(`.film-details__emoji-item`);
+        if (emojiElement) {
+          this._newEmoji = emojiElement.value;
+          this.rerender();
+        }
+      });
+  }
+
+  _setPostCommentListener() {
+    const textComment = this._element.querySelector(`.film-details__comment-input`);
+    textComment.addEventListener(`keydown`, (evt) => {
+      const isCtrlAndEnter = evt.code === `Enter` && evt.ctrlKey;
+      if (isCtrlAndEnter) {
+        const comment = this.collectComment();
+        if (!comment) {
+          return;
+        } else {
+          this._postComment(comment);
+        }
+      }
+    });
   }
 
   _getButtonControlMarkup(name, id, isActive) {
@@ -284,6 +299,24 @@ export default class FilmDetails extends AbstractSmartComponent {
       .getComments(this._id)
       .then((comments) => {
         this._comments = comments;
+        this.rerender();
+      });
+  }
+
+  _postComment(comment) {
+    this._api.postComment(this._id, comment)
+      .then((comments) => {
+        this._comments = comments;
+        this.commentsChanges.notify(this._comments.map((commentItem) => commentItem.id));
+        this.rerender();
+      });
+  }
+
+  _deleteComment(id) {
+    this._api.deleteComment(id)
+      .then(() => {
+        this._comments = this._comments.filter((comment) => comment.id !== id);
+        this.commentsChanges.notify(this._comments.map((comment) => comment.id));
         this.rerender();
       });
   }
