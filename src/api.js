@@ -1,5 +1,5 @@
 import Movie from "./models/movie";
-import Comments from "./models/comments";
+import Comment from "./models/comment";
 
 const StatusCode = {
   OK: 200,
@@ -13,7 +13,7 @@ const Method = {
   DELETE: `DELETE`
 };
 
-const API = class {
+export default class API {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -28,18 +28,18 @@ const API = class {
   getComments(movieId) {
     return this._load({url: `comments/${movieId}`})
       .then((response) => response.json())
-      .then((Comments.parseComments));
+      .then((Comment.parseComments));
   }
 
   postComment(movieId, data) {
     return this._load({
       url: `comments/${movieId}`,
       method: Method.POST,
-      body: JSON.stringify(Comments.toRAW(data)),
+      body: JSON.stringify(Comment.toRAW(data)),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then((response) => response.json())
-      .then((film) => Comments.parseComments(film.comments));
+      .then((film) => Comment.parseComments(film.comments));
   }
 
   deleteComment(id) {
@@ -74,6 +74,4 @@ const API = class {
         throw err;
       });
   }
-};
-
-export default API;
+}

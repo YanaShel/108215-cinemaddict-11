@@ -1,32 +1,32 @@
+export const AUTHORIZATION = `Basic ufbdyf7ujkgdtejlo=`;
+export const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+
 export const FilterType = {
-  all: `All movies`,
-  watchlist: `Watchlist`,
-  history: `History`,
-  favorites: `Favorites`
+  ALL: `All movies`,
+  WATCHLIST: `Watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`
 };
 
 export const Key = {
   ESCAPE: `Escape`,
 };
 
-export const Rang = {
-  NOVICE: `Novice`,
-  FAN: `Fan`,
-  BUFF: `Movie Buff`,
-};
-
-export const NoviceCount = {
-  MIN: 1,
-  MAX: 10,
-};
-
-export const FanCount = {
-  MIN: 11,
-  MAX: 20,
-};
-
-export const MovieBuffCount = {
-  MIN: 21,
-  MAX: Infinity,
+export const Rank = {
+  NOVICE: {
+    name: `Novice`,
+    min: 1,
+    max: 10
+  },
+  FAN: {
+    name: `Fan`,
+    min: 11,
+    max: 20
+  },
+  BUFF: {
+    name: `Movie Buff`,
+    min: 21,
+    max: Infinity
+  }
 };
 

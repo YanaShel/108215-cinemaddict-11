@@ -1,30 +1,29 @@
 import Filters from "../components/filters/filters";
 import {FilterType} from "../util/const";
 import {render, replace} from "../util/dom-util";
-import {getFilmsByFilter} from "../util/filter";
+import {getFilteredFilms} from "../util/filter";
 
 export default class FilterController {
   constructor(container, moviesModel) {
     this._container = container;
     this._moviesModel = moviesModel;
 
-    this._activeFilterType = FilterType.All;
-
     this._filter = null;
+
+    this._activeFilterType = FilterType.All;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
-
-    this._moviesModel.setDataChangeListener(this._onDataChange);
+    this._moviesModel.addDataChangeListener(this._onDataChange);
   }
 
   render() {
     const container = this._container;
-    const allFilms = this._moviesModel.getFilmsAll();
+    const allFilms = this._moviesModel.getAllFilms();
     const filters = Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
-        count: getFilmsByFilter(allFilms, filterType).length,
+        count: getFilteredFilms(allFilms, filterType).length,
         checked: filterType === this._activeFilterType,
       };
     });

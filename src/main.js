@@ -7,9 +7,7 @@ import FilterController from "./controllers/filter-controller";
 import PageController from "./controllers/page-controller";
 import MoviesModel from "./models/movies";
 import {remove, render} from "./util/dom-util";
-
-const AUTHORIZATION = `Basic ufbdyf7ujkgdtejlo=`;
-const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+import {END_POINT, AUTHORIZATION} from "./util/const";
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -18,15 +16,14 @@ const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
 const loading = new Loading();
-const filterController = new FilterController(mainElement, moviesModel);
 const pageController = new PageController(mainElement, moviesModel, api);
 
-filterController.render();
+new FilterController(mainElement, moviesModel).render();
 render(mainElement, loading);
 
 let statistic = null;
 mainElement.addEventListener(`click`, (evt) => {
-  const statsButton = evt.target.closest(`.main-navigation__additional`);
+  const statsButton = evt.target.closest(`.main-navigation__additional[href="#stats"]`);
   const filterButton = evt.target.closest(`.main-navigation__item`);
 
   if (!statsButton && !filterButton) {
@@ -53,10 +50,10 @@ mainElement.addEventListener(`click`, (evt) => {
 api.getFilms()
   .then((films) => {
     remove(loading);
-    moviesModel.setFilms(films);
+    moviesModel.films = films;
     render(headerElement, new UserProfile(films));
     pageController.render();
-    render(footerStatisticsElement, new FilmsStatistics(films));
+    render(footerStatisticsElement, new FilmsStatistics(films.length));
   });
 
 

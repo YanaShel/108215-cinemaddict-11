@@ -3,21 +3,24 @@ import FilmDetails from "../components/films/film-details/film-details";
 import {render, replace, remove} from "../util/dom-util";
 import {Key} from "../util/const";
 
+
 export const State = {
   DEFAULT: `default`,
   DETAILS: `details`,
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange, api) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
-    this._onDataChange = onDataChange;
-    this._onViewChange = onViewChange;
-    this._api = api;
     this._bodyElement = document.querySelector(`body`);
+
     this._fimCard = null;
     this._filmDetails = null;
+
     this._state = State.DEFAULT;
+
+    this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
 
     this._onFilmCardClick = this._onFilmCardClick.bind(this);
     this._closeFilmDetailsPopup = this._closeFilmDetailsPopup.bind(this);
@@ -29,41 +32,8 @@ export default class MovieController {
     const oldFilmCard = this._fimCard;
     const oldFilmDetails = this._filmDetails;
 
-    this._fimCard = new FilmCard(film);
-    this._fimCard.setCardClickListener(this._onFilmCardClick);
-    this._fimCard.setWatchlistButtonClickListener((evt) => {
-      evt.stopPropagation();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isWatchlist: !film.isWatchlist}));
-    });
-    this._fimCard.setWatchedButtonClickListener((evt) => {
-      evt.stopPropagation();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isWatched: !film.isWatched}));
-    });
-    this._fimCard.setFavoriteButtonClickListener((evt) => {
-      evt.stopPropagation();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isFavorite: !film.isFavorite}));
-    });
-
-    this._filmDetails = new FilmDetails(film, this._api);
-    this._filmDetails.watchListChanges.subscribe((inWatchlist) => {
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isWatchlist: inWatchlist}));
-    });
-    this._filmDetails.watchedChanges.subscribe((inWatched) => {
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isWatched: inWatched}));
-    });
-    this._filmDetails.favoritesChanges.subscribe((inFavorite) => {
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isFavorite: inFavorite}));
-    });
-    this._filmDetails.commentsChanges.subscribe((comments) => {
-      const filmItem = Object.assign({}, film, {comments});
-      this._onDataChange(this, film, filmItem, true);
-    });
+    this._createFilmCard(film);
+    this._createFilmDetails(film);
 
     if (oldFilmCard && oldFilmDetails) {
       replace(this._fimCard, oldFilmCard);
@@ -80,7 +50,56 @@ export default class MovieController {
 
   destroy() {
     remove(this._fimCard);
+    remove(this._filmDetails);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _createFilmCard(film) {
+    this._fimCard = new FilmCard(film);
+
+    this._fimCard.setCardClickListener(this._onFilmCardClick);
+
+    this._fimCard.setWatchlistButtonClickListener((evt) => {
+      evt.stopPropagation();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatchlist: !film.isWatchlist}));
+    });
+
+    this._fimCard.setWatchedButtonClickListener((evt) => {
+      evt.stopPropagation();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatched: !film.isWatched}));
+    });
+
+    this._fimCard.setFavoriteButtonClickListener((evt) => {
+      evt.stopPropagation();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite}));
+    });
+  }
+
+  _createFilmDetails(film) {
+    this._filmDetails = new FilmDetails(film);
+
+    this._filmDetails.watchListChanges.subscribe((inWatchlist) => {
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatchlist: inWatchlist}));
+    });
+
+    this._filmDetails.watchedChanges.subscribe((inWatched) => {
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatched: inWatched}));
+    });
+
+    this._filmDetails.favoritesChanges.subscribe((inFavorite) => {
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isFavorite: inFavorite}));
+    });
+
+    this._filmDetails.commentsChanges.subscribe((comments) => {
+      const filmItem = Object.assign({}, film, {comments});
+      this._onDataChange(this, film, filmItem, true);
+    });
   }
 
   _closeFilmDetailsPopup() {
@@ -107,4 +126,5 @@ export default class MovieController {
     this._filmDetails.setCloseButtonClickListener();
     this._filmDetails.setCloseEscListener();
   }
+
 }

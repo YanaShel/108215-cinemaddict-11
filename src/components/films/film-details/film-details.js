@@ -4,7 +4,8 @@ import FilmDetailsComments from "./film-details-comments";
 import Observable from "../../../observable";
 import {formatFilmDuration} from "../../../util/common";
 import moment from "moment";
-import {Key} from "../../../util/const";
+import {AUTHORIZATION, END_POINT, Key} from "../../../util/const";
+import API from "../../../api";
 
 const COUNT_GENRES = 1;
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -16,9 +17,8 @@ const FILM_DETAILS_BUTTONS = [
 ];
 
 export default class FilmDetails extends AbstractSmartComponent {
-  constructor(film, api) {
+  constructor(film) {
     super();
-    this._api = api;
     this._id = film.id;
     this._name = film.name;
     this._nameOriginal = film.nameOriginal;
@@ -37,6 +37,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._isWatchlist = film.isWatchlist;
     this._isWatched = film.isWatched;
     this._isFavorite = film.isFavorite;
+
+    this._api = new API(END_POINT, AUTHORIZATION);
+
     this._newEmoji = null;
     this._deleteButtonListener = null;
     this._setCommentListener = null;

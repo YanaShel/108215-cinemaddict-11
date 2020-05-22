@@ -1,4 +1,4 @@
-import {Rang, NoviceCount, FanCount, MovieBuffCount} from "./const";
+import {Rank} from "./const";
 import moment from "moment";
 import momentDurationFormat from "moment-duration-format";
 
@@ -8,15 +8,14 @@ export const formatFilmDuration = (duration) => {
   return moment.duration(duration, `minutes`).format(`h[h] m[m]`);
 };
 
-export const getRang = (films) => {
-  const watchedFilms = films.filter((film) => film.isWatched);
-  const countWatchedFilms = watchedFilms.length;
-  if (countWatchedFilms >= NoviceCount.MIN && countWatchedFilms <= NoviceCount.MAX) {
-    return Rang.NOVICE;
-  } else if (countWatchedFilms >= FanCount.MIN && countWatchedFilms <= FanCount.MAX) {
-    return Rang.FAN;
-  } else if (countWatchedFilms >= MovieBuffCount.MIN) {
-    return Rang.BUFF;
+export const getRank = (films) => {
+  const watchedFilmsCount = films.filter((film) => film.isWatched).length;
+  if (watchedFilmsCount >= Rank.NOVICE.min && watchedFilmsCount <= Rank.NOVICE.max) {
+    return Rank.NOVICE.name;
+  } else if (watchedFilmsCount >= Rank.FAN.min && watchedFilmsCount <= Rank.FAN.max) {
+    return Rank.FAN.name;
+  } else if (watchedFilmsCount >= Rank.BUFF.min) {
+    return Rank.BUFF.name;
   }
 
   return ``;
