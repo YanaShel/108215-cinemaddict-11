@@ -27,19 +27,9 @@ export default class MovieController {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
-  render(film, state) {
-    this._state = state;
-    const oldFilmCard = this._fimCard;
-    const oldFilmDetails = this._filmDetails;
-
-    this._createFilmCard(film);
+  render(film) {
+    this._renderFilmCard(film);
     this._createFilmDetails(film);
-
-    if (oldFilmCard && oldFilmDetails) {
-      replace(this._fimCard, oldFilmCard);
-    } else {
-      render(this._container.querySelector(`.films-list__container`), this._fimCard);
-    }
   }
 
   setDefaultView() {
@@ -54,8 +44,15 @@ export default class MovieController {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
-  _createFilmCard(film) {
+  _renderFilmCard(film) {
+    const oldFilmCard = this._fimCard;
     this._fimCard = new FilmCard(film);
+
+    if (oldFilmCard) {
+      replace(this._fimCard, oldFilmCard);
+    } else {
+      render(this._container.querySelector(`.films-list__container`), this._fimCard);
+    }
 
     this._fimCard.setCardClickListener(this._onFilmCardClick);
 

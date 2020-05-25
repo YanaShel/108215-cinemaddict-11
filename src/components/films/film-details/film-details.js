@@ -2,10 +2,10 @@ import AbstractSmartComponent from "../../abstract-smart-component";
 import FilmDetailsGenre from "./film-details-genre";
 import FilmDetailsComments from "./film-details-comments";
 import Observable from "../../../observable";
-import {formatFilmDuration} from "../../../util/common";
 import moment from "moment";
-import {AUTHORIZATION, END_POINT, Key} from "../../../util/const";
 import API from "../../../api";
+import {AUTHORIZATION, END_POINT, Key} from "../../../util/const";
+import {formatFilmDuration} from "../../../util/common";
 
 const COUNT_GENRES = 1;
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -262,9 +262,7 @@ export default class FilmDetails extends AbstractSmartComponent {
       if (isCtrlAndEnter) {
         this._commentInputField.setAttribute(`disabled`, `disabled`);
         const comment = this.collectComment();
-        if (!comment) {
-          return;
-        } else {
+        if (comment) {
           this._postComment(comment);
         }
       }
