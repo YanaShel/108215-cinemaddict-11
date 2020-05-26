@@ -132,7 +132,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _getCountFilmsByGenre(films) {
-    let results = [];
+    const results = [];
     if (films.length) {
       const genres = films.map((film) => film.genres).flat();
       const uniqueGenres = new Set(genres);
