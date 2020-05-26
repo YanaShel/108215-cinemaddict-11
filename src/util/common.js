@@ -1,6 +1,6 @@
-import {Rank} from "./const";
 import moment from "moment";
 import momentDurationFormat from "moment-duration-format";
+import {Rank} from "./const";
 
 momentDurationFormat(moment);
 

@@ -55,5 +55,3 @@ api.getFilms()
     pageController.render();
     render(footerStatisticsElement, new FilmsStatistics(films.length));
   });
-
-
