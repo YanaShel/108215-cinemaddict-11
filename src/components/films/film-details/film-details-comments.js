@@ -11,9 +11,10 @@ const EMOJI_NAMES = [
 ];
 
 export default class FilmDetailsComments extends AbstractComponent {
-  constructor(comments) {
+  constructor(comments, newEmoji) {
     super();
     this._comments = comments;
+    this._newEmoji = newEmoji;
   }
 
   getTemplate() {
@@ -24,6 +25,10 @@ export default class FilmDetailsComments extends AbstractComponent {
     const emojiMarkUp = EMOJI_NAMES
       .map((name) => new FilmDetailsEmoji(name).getTemplate())
       .join(`\n`);
+
+    const newEmojiMarkUp = this._newEmoji ?
+      `<img src="./images/emoji/${this._newEmoji}.png"  width=55" height="55" alt="emoji">`
+      : ``;
 
     return (
       `<div class="form-details__bottom-container">
@@ -39,7 +44,9 @@ export default class FilmDetailsComments extends AbstractComponent {
             </ul>
 
             <div class="film-details__new-comment">
-                <div for="add-emoji" class="film-details__add-emoji-label"></div>
+                <div for="add-emoji" class="film-details__add-emoji-label">
+                  ${newEmojiMarkUp}
+                </div>
 
                 <label class="film-details__comment-label">
                     <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>

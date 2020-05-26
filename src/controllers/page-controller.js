@@ -13,12 +13,14 @@ const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
 export default class PageController {
   constructor(container, filmsModel, api) {
-    this._api = api;
     this._container = container;
     this._filmsModel = filmsModel;
 
+    this._api = api;
+
     this._showedFilmControllers = [];
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
+
     this._sort = new Sort();
     this._filmsBlock = new FilmsBlock();
     this._filmsList = new FilmList();
@@ -30,13 +32,12 @@ export default class PageController {
     this._onViewChange = this._onViewChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
-
     this._sort.setSortTypeChangeListener(this._onSortTypeChange);
-    this._filmsModel.setFilterChangeListener(this._onFilterChange);
+    this._filmsModel.addFilterChangeListener(this._onFilterChange);
   }
 
   render() {
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.films;
     const filmBlock = this._filmsBlock.getElement();
     const filmsList = this._filmsList.getElement();
 
@@ -72,9 +73,9 @@ export default class PageController {
     this._sort.show();
   }
 
-  renderFilms(filmListElement, films, onDataChange, onViewChange, api) {
+  renderFilms(filmListElement, films, onDataChange, onViewChange) {
     return films.map((film) => {
-      const movie = new MovieController(filmListElement, onDataChange, onViewChange, api);
+      const movie = new MovieController(filmListElement, onDataChange, onViewChange);
       movie.render(film, FilmState.DEFAULT);
 
       return movie;
@@ -90,7 +91,7 @@ export default class PageController {
   _renderShowMoreButton() {
     remove(this._showMoreButton);
 
-    if (this._showingFilmsCount >= this._filmsModel.getFilms().length) {
+    if (this._showingFilmsCount >= this._filmsModel.films.length) {
       return;
     }
 
@@ -133,7 +134,7 @@ export default class PageController {
   _onDataChange(movieController, oldData, newData) {
     this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
-        const isSuccess = this._filmsModel.updateFilms(oldData.id, filmModel);
+        const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
 
         if (isSuccess) {
           movieController.render(filmModel);
@@ -144,7 +145,7 @@ export default class PageController {
 
   _onSortTypeChange(sortType) {
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
-    const sortedFilms = this._getSortedFilms(this._filmsModel.getFilms(), 0, this._showingFilmsCount, sortType);
+    const sortedFilms = this._getSortedFilms(this._filmsModel.films, 0, this._showingFilmsCount, sortType);
     this._removeFilms();
     this._renderFilms(sortedFilms);
 
@@ -153,7 +154,7 @@ export default class PageController {
 
   _onShowMoreButtonClick() {
     const prevFilmsCount = this._showingFilmsCount;
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.films;
 
     this._showingFilmsCount = this._showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
@@ -171,7 +172,7 @@ export default class PageController {
 
   _updateFilms(count) {
     this._removeFilms();
-    const films = this._filmsModel.getFilms().slice(0, count);
+    const films = this._filmsModel.films.slice(0, count);
     const sortedFilms = this._getSortedFilms(films, 0, SHOWING_FILMS_COUNT_ON_START);
     this._sort.resetSortToDefault();
     this._renderFilms(sortedFilms);

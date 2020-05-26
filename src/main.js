@@ -1,38 +1,29 @@
 import API from "./api";
 import UserProfile from "./components/profile/user-profile";
+import Statistics from "./components/statistics";
+import FilmsStatistics from "./components/films-statistics";
+import Loading from "./components/films/main-list/loading";
 import FilterController from "./controllers/filter-controller";
 import PageController from "./controllers/page-controller";
 import MoviesModel from "./models/movies";
 import {remove, render} from "./util/dom-util";
-import {getRandomArrayItem} from "./util/util";
-
-import Statistics from "./components/statistics";
-
-const AUTHORIZATION = `Basic ufbdyf7ujkgdtejlo=`;
-const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
-
-const USER_RATING_NAMES = [
-  `Novice`,
-  `Fun`,
-  `Movie Buff`
-];
+import {END_POINT, AUTHORIZATION} from "./util/const";
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
+const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 
 const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
-
-const userProfile = new UserProfile(getRandomArrayItem(USER_RATING_NAMES));
-const filterController = new FilterController(mainElement, moviesModel);
+const loading = new Loading();
 const pageController = new PageController(mainElement, moviesModel, api);
 
-render(headerElement, userProfile);
-filterController.render();
+new FilterController(mainElement, moviesModel).render();
+render(mainElement, loading);
 
 let statistic = null;
 mainElement.addEventListener(`click`, (evt) => {
-  const statsButton = evt.target.closest(`.main-navigation__additional`);
+  const statsButton = evt.target.closest(`.main-navigation__additional[href="#stats"]`);
   const filterButton = evt.target.closest(`.main-navigation__item`);
 
   if (!statsButton && !filterButton) {
@@ -54,13 +45,15 @@ mainElement.addEventListener(`click`, (evt) => {
       pageController.show();
       break;
   }
-
 });
 
 api.getFilms()
   .then((films) => {
-    moviesModel.setFilms(films);
+    remove(loading);
+    moviesModel.films = films;
+    render(headerElement, new UserProfile(films));
     pageController.render();
+    render(footerStatisticsElement, new FilmsStatistics(films.length));
   });
 
 

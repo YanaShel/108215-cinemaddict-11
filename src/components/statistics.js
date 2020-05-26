@@ -1,9 +1,8 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {GENRES} from "../const";
+import {formatFilmDuration, getRank} from "../util/common";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import moment from "moment";
-import {formatFilmDuration} from "../util/date";
 
 const BAR_HEIGHT = 50;
 const FILTER_ID_PREFIX = `statistic-`;
@@ -32,7 +31,7 @@ export default class Statistics extends AbstractSmartComponent {
     super();
     this._activeFilter = FILTERS[0].id;
     this._filmsModel = filmsModel;
-    this._films = this._filmsModel.getFilms().filter((film) => film.isWatched);
+    this._films = this._filmsModel.films.filter((film) => film.isWatched);
     this._filteredFilms = this._films.slice();
     this._chartData = this._getCountFilmsByGenre(this._films);
     this._myChart = null;
@@ -47,7 +46,7 @@ export default class Statistics extends AbstractSmartComponent {
             <p class="statistic__rank">
                 Your rank
                 <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-                <span class="statistic__rank-label">Sci-Fighter</span>
+                <span class="statistic__rank-label">${getRank(this._films)}</span>
             </p>
 
             <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -102,7 +101,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _getFilteredFilms() {
-    const films = this._filmsModel.getFilms().filter((film) => film.isWatched);
+    const films = this._filmsModel.films.filter((film) => film.isWatched);
     const currentPeriod = this._activeFilter;
 
     if (currentPeriod === FILTERS[0].id) {
@@ -133,17 +132,20 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _getCountFilmsByGenre(films) {
-    let result = [];
+    let results = [];
     if (films.length) {
-      result = GENRES.map((genre) => {
-        const genres = films.map((film) => film.genres).flat();
-        return {
-          genre,
-          count: genres.filter((genreItem) => genreItem === genre).length,
+      const genres = films.map((film) => film.genres).flat();
+      const uniqueGenres = new Set(genres);
+      uniqueGenres.forEach((item) => {
+        const result = {
+          genre: item,
+          count: genres.filter((genreItem) => genreItem === item).length,
         };
-      }).sort((a, b) => b.count - a.count);
+        results.push(result);
+      });
+      results.sort((a, b) => b.count - a.count);
     }
-    return result;
+    return results;
   }
 
   _getFilmsDuration(films) {

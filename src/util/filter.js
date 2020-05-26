@@ -1,13 +1,14 @@
-import {FilterType} from "../const";
+import {FilterType} from "./const";
 
-export const getFilmsByFilter = (films, filterType) => {
+export const getFilteredFilms = (films, filterType) => {
   switch (filterType) {
-    case FilterType.favorites:
+    case FilterType.FAVORITES:
       return films.filter((f) => f.isFavorite);
-    case FilterType.history:
+    case FilterType.HISTORY:
       return films.filter((f) => f.isWatched);
-    case FilterType.watchlist:
+    case FilterType.WATCHLIST:
       return films.filter((f) => f.isWatchlist);
+    case FilterType.ALL:
     default:
       return films;
   }
