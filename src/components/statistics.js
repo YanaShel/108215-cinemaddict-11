@@ -132,8 +132,8 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _getCountFilmsByGenre(films) {
+    const results = [];
     if (films.length) {
-      const results = [];
       const genres = films.map((film) => film.genres).flat();
       const uniqueGenres = new Set(genres);
       uniqueGenres.forEach((item) => {
@@ -145,7 +145,7 @@ export default class Statistics extends AbstractSmartComponent {
       });
       results.sort((a, b) => b.count - a.count);
     }
-    return [];
+    return results;
   }
 
   _getFilmsDuration(films) {
