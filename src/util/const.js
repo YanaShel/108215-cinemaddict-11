@@ -1,6 +1,13 @@
 export const AUTHORIZATION = `Basic ufbdyf7ujkgdtejlo=`;
 export const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`,
+  COMMENTED: `commented`
+};
+
 export const FilterType = {
   ALL: `All movies`,
   WATCHLIST: `Watchlist`,

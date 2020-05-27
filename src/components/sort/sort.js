@@ -1,4 +1,6 @@
-import AbstractComponent from "../abstract-component";
+import AbstractSmartComponent from "../abstract-smart-component";
+
+const DEFAULT_SORT_TYPE = `default`;
 
 export const SortType = {
   default: `Sort by default`,
@@ -6,11 +8,12 @@ export const SortType = {
   rating: `Sort by rating`,
 };
 
-export default class Sort extends AbstractComponent {
+export default class Sort extends AbstractSmartComponent {
   constructor() {
     super();
 
-    this._currenSortType = `default`;
+    this._currenSortType = DEFAULT_SORT_TYPE;
+    this._sortTypeChangeListener = null;
   }
 
   getTemplate() {
@@ -21,13 +24,21 @@ export default class Sort extends AbstractComponent {
     ).trim();
   }
 
+  recoveryListeners() {
+    this.setSortTypeChangeListener(this._sortTypeChangeListener);
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
   getSortType() {
     return this._currenSortType;
   }
 
   resetSortToDefault() {
-    const defaultSortButton = this.getElement().querySelector(`a[data-sort-type="default"]`);
-    this._updateActiveClass(defaultSortButton);
+    this._currenSortType = DEFAULT_SORT_TYPE;
+    this.rerender();
   }
 
   setSortTypeChangeListener(listener) {
@@ -50,6 +61,8 @@ export default class Sort extends AbstractComponent {
 
       listener(this._currenSortType);
     });
+
+    this._sortTypeChangeListener = listener;
   }
 
   _createSortItemMarkup(dataAttribute, name, i) {

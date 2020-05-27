@@ -31,11 +31,11 @@ export default class API {
       .then((Comment.parseComments));
   }
 
-  postComment(movieId, data) {
+  postComment(movieId, comment) {
     return this._load({
       url: `comments/${movieId}`,
       method: Method.POST,
-      body: JSON.stringify(Comment.toRAW(data)),
+      body: JSON.stringify(Comment.toRAW(comment)),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then((response) => response.json())

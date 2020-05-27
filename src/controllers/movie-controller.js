@@ -95,7 +95,7 @@ export default class MovieController {
 
     this._filmDetails.commentsChanges.subscribe((comments) => {
       const filmItem = Object.assign({}, film, {comments});
-      this._onDataChange(this, film, filmItem, true);
+      this._onDataChange(this, film, filmItem);
     });
   }
 

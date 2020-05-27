@@ -41,6 +41,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._api = new API(END_POINT, AUTHORIZATION);
 
     this._newEmoji = null;
+    this._commentText = ``;
     this._deleteButtonListener = null;
     this._setCommentListener = null;
     this._commentInputField = null;
@@ -65,7 +66,7 @@ export default class FilmDetails extends AbstractSmartComponent {
       .map((genre) => new FilmDetailsGenre(genre).getTemplate())
       .join(`\n`);
 
-    const commentsMarkup = new FilmDetailsComments(this._comments, this._newEmoji).getTemplate();
+    const commentsMarkup = new FilmDetailsComments(this._comments, this._newEmoji, this._commentText).getTemplate();
 
     return (
       `<section class="film-details">
@@ -214,8 +215,8 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   resetAddCommentForm() {
-    const textComment = this._element.querySelector(`.film-details__comment-input`);
-    textComment.value = ``;
+    const commentElement = this._element.querySelector(`.film-details__comment-input`);
+    commentElement.value = ``;
     const emojiElement = this._element.querySelector(`.film-details__add-emoji-label`).firstElementChild;
 
     if (emojiElement) {
@@ -257,8 +258,11 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   _setPostCommentListener() {
     this._commentInputField = this._element.querySelector(`.film-details__comment-input`);
+    this._commentInputField.addEventListener(`input`, () => {
+      this._commentText = this._commentInputField.value;
+    });
     this._commentInputField.addEventListener(`keydown`, (evt) => {
-      const isCtrlAndEnter = evt.code === `Enter` && evt.ctrlKey;
+      const isCtrlAndEnter = evt.code === `Enter` && (evt.ctrlKey || evt.metaKey);
       if (isCtrlAndEnter) {
         this._commentInputField.setAttribute(`disabled`, `disabled`);
         const comment = this.collectComment();

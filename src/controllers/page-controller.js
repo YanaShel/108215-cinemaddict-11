@@ -7,6 +7,7 @@ import MostCommentedList from "../components/films/extra-lists/most-commented-li
 import FilmsBlock from "../components/films/films-block";
 import MovieController, {State as FilmState} from "./movie-controller";
 import {remove, render} from "../util/dom-util";
+import {SortType} from "../util/const";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
@@ -26,6 +27,8 @@ export default class PageController {
     this._filmsList = new FilmList();
     this._noFilm = new NoFilm();
     this._showMoreButton = new ShowMoreButton();
+    this._topRatedList = null;
+    this._mostCommentedList = null;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
@@ -54,13 +57,9 @@ export default class PageController {
 
     this._renderShowMoreButton();
 
-    this._topRatedList = new TopRatedList(films);
-    render(filmBlock, this._topRatedList);
-    this.renderFilms(this._topRatedList.getElement(), this._getTopRatedFilms(films), this._onDataChange, this._onViewChange, this._api);
+    this._renderTopRatedFilms();
 
-    this._mostCommentedList = new MostCommentedList();
-    render(filmBlock, this._mostCommentedList);
-    this.renderFilms(this._mostCommentedList.getElement(), this._getMostCommentedFilms(films), this._onDataChange, this._onViewChange, this._api);
+    this._renderMostCommentedFilms();
   }
 
   hide() {
@@ -112,23 +111,63 @@ export default class PageController {
       .slice(0, 2);
   }
 
+  _renderTopRatedFilms() {
+    if (this._topRatedList) {
+      remove(this._topRatedList);
+    }
+
+    const films = this._filmsModel.films;
+    this._topRatedList = new TopRatedList(films);
+    render(this._filmsBlock.getElement(), this._topRatedList);
+    this.renderFilms(this._topRatedList.getElement(), this._getTopRatedFilms(films), this._onDataChange, this._onViewChange, this._api);
+  }
+
+  _renderMostCommentedFilms() {
+    if (this._mostCommentedList) {
+      remove(this._mostCommentedList);
+    }
+
+    const films = this._filmsModel.films;
+    this._mostCommentedList = new MostCommentedList();
+    render(this._filmsBlock.getElement(), this._mostCommentedList);
+    this.renderFilms(this._mostCommentedList.getElement(), this._getMostCommentedFilms(films), this._onDataChange, this._onViewChange, this._api);
+  }
+
+  _rerenderFilmsExtra() {
+    this._renderTopRatedFilms();
+    this._renderMostCommentedFilms();
+  }
+
   _getSortedFilms(films, from, to, sortType = `default`) {
     let sortedFilms = [];
     const showingFilms = films.slice();
 
     switch (sortType) {
-      case `date`:
+      case SortType.DATE:
         sortedFilms = showingFilms.sort((a, b) => b.releaseDate - a.releaseDate);
         break;
-      case `rating`:
+      case SortType.RATING:
         sortedFilms = showingFilms.sort((a, b) => b.rating - a.rating);
         break;
-      case `default`:
+      case SortType.DEFAULT:
         sortedFilms = showingFilms;
         break;
     }
 
     return sortedFilms.slice(from, to);
+  }
+
+  _updateFilms(count) {
+    this._removeFilms();
+    const sortedFilms = this._getSortedFilms(this._filmsModel.films, 0, count, this._sort.getSortType());
+    this._renderFilms(sortedFilms);
+    this._renderShowMoreButton();
+    this._rerenderFilmsExtra();
+  }
+
+  _removeFilms() {
+    this._showedFilmControllers.forEach((filmController) => filmController.destroy());
+    this._showedFilmControllers = [];
   }
 
   _onDataChange(movieController, oldData, newData) {
@@ -167,24 +206,11 @@ export default class PageController {
   }
 
   _onFilterChange() {
+    this._sort.resetSortToDefault();
     this._updateFilms(SHOWING_FILMS_COUNT_ON_START);
   }
 
-  _updateFilms(count) {
-    this._removeFilms();
-    const films = this._filmsModel.films.slice(0, count);
-    const sortedFilms = this._getSortedFilms(films, 0, SHOWING_FILMS_COUNT_ON_START);
-    this._sort.resetSortToDefault();
-    this._renderFilms(sortedFilms);
-    this._renderShowMoreButton();
-  }
-
-  _removeFilms() {
-    this._showedFilmControllers.forEach((filmController) => filmController.destroy());
-    this._showedFilmControllers = [];
-  }
-
   _onViewChange() {
-    this._showedFilmControllers.forEach((it) => it.setDefaultView());
+    this._showedFilmControllers.forEach((filmController) => filmController.setDefaultView());
   }
 }

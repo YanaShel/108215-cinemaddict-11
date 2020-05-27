@@ -11,10 +11,11 @@ const EMOJI_NAMES = [
 ];
 
 export default class FilmDetailsComments extends AbstractComponent {
-  constructor(comments, newEmoji) {
+  constructor(comments, newEmoji, commentText) {
     super();
     this._comments = comments;
     this._newEmoji = newEmoji;
+    this._commentText = commentText;
   }
 
   getTemplate() {
@@ -49,7 +50,7 @@ export default class FilmDetailsComments extends AbstractComponent {
                 </div>
 
                 <label class="film-details__comment-label">
-                    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+                    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${this._commentText}</textarea>
                 </label>
 
                 <div class="film-details__emoji-list">
